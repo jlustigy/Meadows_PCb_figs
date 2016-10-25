@@ -1,3 +1,7 @@
+*.txt
+*.dat
+*.rad
+*.atm
 *.DS_Store
 *.pyc
 *~

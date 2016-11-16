@@ -7,12 +7,18 @@ Author: Jacob Lustig-Yaeger
 
 import matplotlib as mpl
 
-# Typical plot parameters that make for pretty plots
-mpl.rcParams['figure.figsize'] = (10,8)
-mpl.rcParams['font.size'] = 30.0
-
-## for Palatino and other serif fonts use:
 mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
 mpl.rc('text', usetex=True)
+mpl.rcParams['font.size'] = 30.0
 
-color1 = "black"
+COLOR1 = "black"
+LEGEND_FONTSIZE = 16
+
+def set_default_figsize():
+    mpl.rcParams['figure.figsize'] = (10,8)
+
+def set_atm_figsize():
+    mpl.rcParams['figure.figsize'] = (7,8)
+
+def set_spectrum_figsize():
+    mpl.rcParams['figure.figsize'] = (10,6)

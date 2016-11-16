@@ -2,6 +2,8 @@
 *.dat
 *.rad
 *.atm
+*.tran
+*.pt
 *.DS_Store
 *.pyc
 *~

@@ -9,3 +9,5 @@
 *~
 figures/*.pdf
 resources/*
+*.dropbox
+*Icon*

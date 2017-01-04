@@ -8,6 +8,8 @@
 *.pyc
 *~
 figures/*.pdf
+figures/*.png
+figures/*.eps
 resources/*
 *.dropbox
 *Icon*

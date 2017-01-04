@@ -8,10 +8,12 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     import numpy as np
+    import os
+    import sys
+    sys.path.append("../../")
     from utils import fig_params
     import utils.phasecurves as pcs
     import utils.coronagraphy as pcg
-    import os
 
     # Params specific to this plot
     savetag = "fig30"

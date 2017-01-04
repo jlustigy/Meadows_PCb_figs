@@ -17,6 +17,8 @@ def make_fig():
 
     # Params specific to this plot
     savetag = "fig29"
+    itime = 20.0    # Exposure time
+    wantsnr = 20.0  # Desired signal-to-noise ratio
 
     # More general params
     planetdir = os.path.join(os.path.dirname(__file__),"model_outputs/")
@@ -27,7 +29,7 @@ def make_fig():
     output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
 
     # Make plot
-    pcg.plot_coronagraph(alpha, output1, savetag=savetag, itime=20.0, wantsnr=20.0)
+    pcg.plot_coronagraph(alpha, output1, savetag=savetag, itime=itime, wantsnr=wantsnr)
 
     return
 #########################################

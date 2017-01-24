@@ -7,10 +7,10 @@ import os
 
 __all__ = ["add_coronagraph_axes", "plot_coronagraph"]
 
-def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35, lammax=3.0,
+def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.35, lammax=3.0,
                     ref_lam=0.76, wantsnr=10.0, itime=None, Tput=0.2, saveplot=False, title="30m",
                     iwa_lines=True, ax1=None, ax2=None, Tsys=300., Tdet=50.,
-                    ground=False):
+                    ground=False, ytype="FpFs"):
 
     lw = 2.0
     mpl.rcParams['font.size'] = 20.0
@@ -19,13 +19,13 @@ def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35,
     idx = np.argmin(np.abs(alpha - phase))
 
     # Select phase
-    lam = lam[idx,::-1]
+    lamhr = lamhr[idx,::-1]
     sol = sol[idx,::-1]
     rad = rad[idx,::-1]
 
     # Filter NaNs
     mask = np.isfinite(rad) & np.isfinite(sol)
-    lam = lam[mask]
+    lamhr = lamhr[mask]
     sol = sol[mask]
     rad = rad[mask]
 
@@ -68,11 +68,11 @@ def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35,
     # set lammax to IWA = 1
     if iwa_lines:
         sep =  r / d # arcsec
-        iwa1 = 1.22 * (lam * 1e-6) / diam * 206265 # arcsec
-        iwa2 = 2. * (lam * 1e-6) / diam * 206265 # arcsec
-        iwa3 = 3. * (lam * 1e-6) / diam * 206265 # arcsec
+        iwa1 = 1.22 * (lamhr * 1e-6) / diam * 206265 # arcsec
+        iwa2 = 2. * (lamhr * 1e-6) / diam * 206265 # arcsec
+        iwa3 = 3. * (lamhr * 1e-6) / diam * 206265 # arcsec
         idy = np.argmin(np.abs(iwa1 - sep))
-        lammax = lam[idy]
+        lammax = lamhr[idy]
 
     # Calculate hi-resolution reflectivity
     Ahr   = np.pi * rad / sol
@@ -83,7 +83,7 @@ def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35,
 
     # Run coronagraph with default LUVOIR telescope (aka no keyword arguments)
     lam, dlam, A, q, Cratio, cp, csp, cz, cez, cD, cR, cth, DtSNR = \
-        cg.count_rates(Ahr, lam, sol, phase, Phi, Rp, Teff, Rs, r, d, Nez,
+        cg.count_rates(Ahr, lamhr, sol, phase, Phi, Rp, Teff, Rs, r, d, Nez,
                        THERMAL = True, wantsnr=wantsnr, GROUND=ground,
                         lammin = lammin,
                         lammax = lammax,
@@ -121,11 +121,20 @@ def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35,
     # Calculate signal-to-noise assuming background subtraction (the "2")
     SNR  = cp*Dts/np.sqrt((cp + 2*cb)*Dts)
 
+    # Use ytype to decide what quantity to noise-up
+    if ytype == "FpFs":
+        yspec = Cratio
+    elif ytype == "Fp":
+        Fs = cg.downbin_spec(sol, lamhr, lam, dlam=dlam)
+        yspec = cg.noise_routines.Fplan(A, Phi, Fs, Rp, d)
+    else:
+        print "Error: %s is an invalid ytype" %ytype
+
     # Calculate 1-sigma errors
-    sig= Cratio/SNR
+    sig= yspec/SNR
 
     # Add gaussian noise to flux ratio
-    spec = Cratio + np.random.randn(len(Cratio))*sig
+    spec = yspec + np.random.randn(len(yspec))*sig
 
     ################################
     # PLOTTING
@@ -158,17 +167,32 @@ def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35,
         plot_text = plot_text + '\n SNR = '+"{:.1f}".format(ref_SNR)+\
             ' at '+"{:.2f}".format(lam[ireflam])+r' $\mu$m'
 
+    if ytype == "FpFs":
+        ystretch = 1e9
+        ylimpad = 20
+        ymin = -10
+        ylabel = r"F$_p$/F$_s$ ($\times 10^9$)"
+        ylim = [ymin, np.max(yspec)*ystretch+ylimpad]
+    elif ytype == "Fp":
+        ystretch = 1
+        ylimpad = 0.1 * (np.max(yspec) - np.min(yspec))
+        ymin = 0
+        ylabel = r"F$_p$"
+        ylim = [ymin, np.max(yspec)*ystretch+ylimpad]
+
     # Draw plot
-    ax2.plot(lam, Cratio*1e9, lw=2.0, color="purple", alpha=0.7, ls="steps-mid")
-    ax2.errorbar(lam, spec*1e9, yerr=sig*1e9, fmt='o', color='k', ms=5.0)
+    ax2.plot(lam, yspec*ystretch, lw=2.0, color="purple", alpha=0.7, ls="steps-mid")
+    ax2.errorbar(lam, spec*ystretch, yerr=sig*ystretch, fmt='o', color='k', ms=5.0)
 
     # Set labels
-    ax2.set_ylabel(r"F$_p$/F$_s$ ($\times 10^9$)")
-    ax2.set_xlabel("Wavelength [$\mu$m]")
+    ax2.set_ylabel(ylabel)
     ax2.text(0.75, 0.97, plot_text,\
          verticalalignment='top', horizontalalignment='center',\
          transform=ax2.transAxes,\
          color='black', fontsize=15, bbox=dict(boxstyle="square", fc="w", ec="k"))
+
+    # Set x-label
+    ax2.set_xlabel("Wavelength [$\mu$m]")
 
     # Create vertical lines for IWA cutoffs
     if iwa_lines:
@@ -187,7 +211,6 @@ def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35,
         ax1.axvline(x = lam[idy3], color="blue", lw=2.0, ls="--")
 
     # Adjust x,y limits
-    ylim = [-10, np.max(Cratio)*1e9+20]
     if ylim is not None: ax2.set_ylim(ylim)
     if xlim is not None: ax2.set_xlim(xlim)
 
@@ -218,7 +241,8 @@ def add_coronagraph_axes(lam, sol, rad, alpha, phase=90., diam=30., lammin=0.35,
 
     return ax1, ax2
 
-def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig", plotdir="../../figures/"):
+def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
+                     plotdir="../../figures/", ytype="FpFs"):
 
     lammin = 0.3
     lammax = 1.5
@@ -250,7 +274,8 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig", plo
                                Tput=Tput, diam=16.0,
                                title="LUVOIR 16m",
                                ax1=ax2, ax2=ax3, Tsys=200.0, Tdet=50.0,
-                               ground=False, wantsnr=wantsnr, itime=itime)
+                               ground=False, wantsnr=wantsnr, itime=itime,
+                               ytype=ytype)
     ax2.set_title("LUVOIR 16m")
 
     # Plot HabEx
@@ -258,7 +283,8 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig", plo
                                 Tput=Tput, diam=6.5,
                                 title="HabEx 6.5m",
                                 ax1=ax0, ax2=ax1, Tsys=200.0, Tdet=50.0,
-                                ground=False, wantsnr=wantsnr, itime=itime)
+                                ground=False, wantsnr=wantsnr, itime=itime,
+                                ytype=ytype)
     ax0.set_title("HabEx 6.5m")
 
     # Plot 30m Ground w/IWA lines
@@ -267,7 +293,8 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig", plo
                                        lammin = 0.35, lammax = 1.5,
                                        ax1=ax4, ax2=ax5, iwa_lines=True,
                                        Tsys=269.0, Tdet=50.0, ground=True,
-                                       wantsnr=wantsnr, itime=itime
+                                       wantsnr=wantsnr, itime=itime,
+                                       ytype=ytype
                                        )
     ax4.set_title("Ground-Based 30m")
 

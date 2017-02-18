@@ -16,8 +16,8 @@ def make_fig():
     import utils.coronagraphy as pcg
 
     # Params specific to this plot
-    savetag = "fig29_Fp"
-    ytype = "Fp"
+    savetag = "fig29_mod2_fpa"
+    ytype = "FpFs"
     itime = 20.0    # Exposure time
     wantsnr = 20.0  # Desired signal-to-noise ratio
 

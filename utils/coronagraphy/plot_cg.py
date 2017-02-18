@@ -65,6 +65,11 @@ def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.3
     MzV    = 23.0
     MezV   = 22.0
 
+    if ground:
+        set_fpa = 0.5
+    else:
+        set_fpa = None
+
     # set lammax to IWA = 1
     if iwa_lines:
         sep =  r / d # arcsec
@@ -84,26 +89,27 @@ def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.3
     # Run coronagraph with default LUVOIR telescope (aka no keyword arguments)
     lam, dlam, A, q, Cratio, cp, csp, cz, cez, cD, cR, cth, DtSNR = \
         cg.count_rates(Ahr, lamhr, sol, phase, Phi, Rp, Teff, Rs, r, d, Nez,
-                       THERMAL = True, wantsnr=wantsnr, GROUND=ground,
-                        lammin = lammin,
-                        lammax = lammax,
-                        Res    = Res   ,
-                        diam   = diam  ,
-                        Tput   = Tput  ,
-                        C      = C     ,
-                        IWA    = IWA   ,
-                        OWA    = OWA   ,
-                        Tsys   = Tsys  ,
-                        Tdet   = Tdet  ,
-                        emis   = emis  ,
-                        De     = De    ,
-                        DNHpix = DNHpix,
-                        Re     = Re    ,
-                        Dtmax  = Dtmax ,
-                        X      = X     ,
-                        qe     = qe    ,
-                        MzV    = MzV   ,
-                        MezV   = MezV
+                       THERMAL  = True, wantsnr=wantsnr, GROUND=ground,
+                        lammin  = lammin,
+                        lammax  = lammax,
+                        Res     = Res   ,
+                        diam    = diam  ,
+                        Tput    = Tput  ,
+                        C       = C     ,
+                        IWA     = IWA   ,
+                        OWA     = OWA   ,
+                        Tsys    = Tsys  ,
+                        Tdet    = Tdet  ,
+                        emis    = emis  ,
+                        De      = De    ,
+                        DNHpix  = DNHpix,
+                        Re      = Re    ,
+                        Dtmax   = Dtmax ,
+                        X       = X     ,
+                        qe      = qe    ,
+                        MzV     = MzV   ,
+                        MezV    = MezV  ,
+                        set_fpa = set_fpa
                       )
 
     # Calculate background photon count rates

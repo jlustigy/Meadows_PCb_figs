@@ -14,6 +14,9 @@ mpl.rcParams['font.size'] = 30.0
 COLOR1 = "black"
 LEGEND_FONTSIZE = 16
 
+def colors_from_molecs(molecules):
+    return
+
 def set_default_figsize():
     mpl.rcParams['figure.figsize'] = (10,8)
 

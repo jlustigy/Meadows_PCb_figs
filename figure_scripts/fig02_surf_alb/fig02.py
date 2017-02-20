@@ -92,9 +92,9 @@ def make_fig():
     #poly1 = 5
     #poly2 = 5
 
-    fig, ax = plt.subplots(figsize=(10,6))
+    fig, ax = plt.subplots(figsize=(16,8))
     ax.set_xlabel(r"Wavelength [$\mu$m]")
-    ax.set_ylabel(r"Geometric Albedo")
+    ax.set_ylabel(r"Reflectance")
     ax.set_xlim([lammin, lammax])
 
     for i in range(len(files)):

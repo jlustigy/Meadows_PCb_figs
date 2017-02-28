@@ -1,5 +1,5 @@
 """
-Figure 15:
+Figure 17:
 
 Author: Jacob Lustig-Yaeger
 """
@@ -8,14 +8,14 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig15"
-    fname1 = "profile_o2lb_10bar_h2o.pt_filtered_hitran2012_50_100000cm_toa.rad"
-    fname2 = "profile_o2lb_10bar_dry.pt_filtered_hitran2012_50_100000cm_toa.rad"
-    title1 = "10 bar O$_2$ (Ocean)"
-    title2 = "10 bar O$_2$ (Dessicated)"
-    lammin = 0.2
+    savetag = "fig17"
+    fname1 = "fig17_smart_spectra_pandora10bar_cloudy_500_100000cm-1_toa.rad"
+    fname2 = "fig17_smart_spectra_pandora90bar_clouds_500_100000cm-1_toa.rad"
+    title1 = "10 bar Venus-like (Clouds)"
+    title2 = "90 bar Venus-like (Clouds)"
+    lammin = 0.3
     lammax = 2.5
-    ylim = [-0.02, 0.41]
+    ylim = [-0.02, 0.61]
     labels1 = ["O2", "O3", "O4", "CO", "CO2", "H2O"]
     labels2 = ["O2", "O3", "O4", "CO", "CO2"]
 

@@ -16,9 +16,6 @@ mpl.rcParams['font.size'] = 30.0
 COLOR1 = "black"
 LEGEND_FONTSIZE = 16
 
-def colors_from_molecs(molecules):
-    return
-
 def set_default_figsize():
     mpl.rcParams['figure.figsize'] = (10,8)
 
@@ -27,16 +24,3 @@ def set_atm_figsize():
 
 def set_spectrum_figsize():
     mpl.rcParams['figure.figsize'] = (16,8)
-
-def tex_molecule(formula):
-    """
-    Create LaTeX compatible string for molecular formula from simple string
-    """
-    new = r''
-    for char in formula:
-        if char.isdigit():
-            tmp = '$_{'+char.upper()+'}$'
-        else:
-            tmp = char
-        new = new+tmp
-    return new

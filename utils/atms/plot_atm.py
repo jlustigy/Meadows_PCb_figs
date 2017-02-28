@@ -94,7 +94,7 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
                     if legloc is None:
                         # Grab a valid y-index at random
                         j = np.random.choice(np.arange(len(mask))[mask])
-                    elif legloc[0] is None:
+                    elif legloc[i+1] is None:
                         # Grab a valid y-index at random
                         j = np.random.choice(np.arange(len(mask))[mask])
                     else:

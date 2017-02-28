@@ -21,8 +21,9 @@ def make_fig():
     title2 = "Archean $3\%$ CH$_4$, $5\%$ CO$_2$"
     seed = 7
     xlim = [1e-8, 2]
-    ylim = [1e5, 1e-3 ]
+    ylim = [1e5, 6e-3 ]
     tlim = [145, 305]
+    legloc = [3e-1, 2e-2, None, None, None, 3e-2, None, None]
 
     # Read in atm files
     atmpath = os.path.join(os.path.dirname(__file__),"model_outputs/", fname1)
@@ -31,13 +32,13 @@ def make_fig():
     data2 = np.genfromtxt(atmpath, skip_header=1)
 
     # Parse atm data
-    P1, T1 = data1[:,0], data1[:,1]
-    gas_profiles1 = data1[:,2:]
-    molec_names1 = ["H2O", "CH4", "CO2", "O2", "O3", "CO", "HNO3", "NO2", "SO2", "N2O", "N2"]
+    alt1, P1, T1 = data1[:,0], data1[:,1]*1e5, data1[:,2]
+    gas_profiles1 = data1[:,3:]
+    molec_names1 = ["H$_2$O", "CH$_4$", "O$_2$", "CO$_2$", "C$_2$H$_6$", "CO", "N$_2$"]
 
-    P2, T2 = data2[:,0], data2[:,1]
-    gas_profiles2 = data2[:,2:]
-    molec_names2 = ["H2O", "CH4", "CO2", "O2", "O3", "CO", "HNO3", "NO2", "SO2", "N2O", "N2"]
+    alt2, P2, T2 = data2[:,0], data2[:,1]*1e5, data2[:,2]
+    gas_profiles2 = data2[:,3:]
+    molec_names2 = ["H$_2$O", "CH$_4$", "O$_2$", "CO$_2$", "C$_2$H$_6$", "CO", "N$_2$"]
 
     P = (P1, P2)
     T = (T1, T2)
@@ -49,7 +50,7 @@ def make_fig():
     #atm.add_atm_plot(P, T, gas_profiles, molec_names, legend=True, title=plot_title)
     atm.plot_double_atm(P, T, gas_profiles, molec_names, title=title,
                         savetag=savetag, xlim=xlim,
-                        ylim=ylim, tlim=tlim, seed=seed)
+                        ylim=ylim, tlim=tlim, seed=seed, legloc=legloc)
 
     return
 #########################################

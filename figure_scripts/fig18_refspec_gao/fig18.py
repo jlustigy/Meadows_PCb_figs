@@ -1,5 +1,5 @@
 """
-Figure 15:
+Figure 18:
 
 Author: Jacob Lustig-Yaeger
 """
@@ -8,14 +8,12 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig15"
-    fname1 = "profile_o2lb_10bar_h2o.pt_filtered_hitran2012_50_100000cm_toa.rad"
-    fname2 = "profile_o2lb_10bar_dry.pt_filtered_hitran2012_50_100000cm_toa.rad"
-    title1 = "10 bar O$_2$ (Ocean)"
-    title2 = "10 bar O$_2$ (Dessicated)"
-    lammin = 0.2
+    savetag = "fig18"
+    fname1 = "gao_1bar_final_toa_old.rad"
+    title1 = "1 bar CO$_2$/CO/O$_2$ (Dessicated)"
+    lammin = 0.1
     lammax = 2.5
-    ylim = [-0.02, 0.41]
+    ylim = [-0.005, 0.12]
     labels1 = ["O2", "O3", "O4", "CO", "CO2", "H2O"]
     labels2 = ["O2", "O3", "O4", "CO", "CO2"]
 
@@ -30,13 +28,11 @@ def make_fig():
     import utils.spectra as spc
 
     # More general params
-    fname = [os.path.join(os.path.dirname(__file__),"model_outputs/", f) for f in [fname1, fname2]]
-    title = [title1, title2]
-    labels = [labels1, labels2]
+    fname = os.path.join(os.path.dirname(__file__),"model_outputs/", fname1)
 
     # Make reflectance plot
     spc.plot_rad(fname, savetag=savetag, lammin=lammin, lammax=lammax, ylim=ylim,
-                 title=title, labels=None)
+                 title=title1, labels=None)
 
     return
 #########################################

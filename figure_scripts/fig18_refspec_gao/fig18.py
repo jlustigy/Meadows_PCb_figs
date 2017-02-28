@@ -9,7 +9,8 @@ def make_fig():
 
     # Params specific to this plot
     savetag = "fig18"
-    fname1 = "gao_1bar_final_toa_old.rad"
+    #fname1 = "gao_1bar_final_toa_old.rad"
+    fname1 = "smart_gao_1bar_update_xsec_toa.rad"
     title1 = "1 bar CO$_2$/CO/O$_2$ (Dessicated)"
     lammin = 0.1
     lammax = 2.5

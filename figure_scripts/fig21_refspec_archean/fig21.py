@@ -21,7 +21,7 @@ def make_fig():
     savetag = "fig21"
     title1 = "Archean Earth-like ($50\%$ clouds)"
     plot_kwargs = [
-        {"color" : "blue", "label" : "No Haze, $5\%$ CO$_2$, $1\%$ CH$_4$", "alpha" : 0.7},
+        {"color" : "purple", "label" : "No Haze, $5\%$ CO$_2$, $1\%$ CH$_4$", "alpha" : 0.7},
         {"color" : "orange", "label" : "Haze, $5\%$ CO$_2$, $1.5\%$ CH$_4$", "alpha" : 0.7}
     ]
     #title2 = "10 bar O$_2$ (Dessicated)"

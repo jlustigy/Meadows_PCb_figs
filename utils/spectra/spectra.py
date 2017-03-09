@@ -129,7 +129,7 @@ def weight_spectra(dic, ret=True, output=None):
 def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
                     plot_kwargs={"color" : "black"}, title=None, plotdir="../../figures/",
                     legloc=None, ylim=None, labels=None, forced_single=False,
-                    legend=False):
+                    legend=False, Nstr=8):
     """
 
     Parameters
@@ -171,7 +171,7 @@ def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
         f = fname[i]
         label = labels[i]
         # Read in rad file(s)
-        lam, wno, solar, toaf, rads = read_rad(f)
+        lam, wno, solar, toaf, rads = read_rad(f, Numu=int(Nstr/2.))
         mask = (lam > lammin) & (lam < lammax)
         # Calculate reflectivity
         refl = toaf / solar

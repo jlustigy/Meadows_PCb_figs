@@ -8,9 +8,12 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig17"
-    fname1 = "fig17_smart_spectra_pandora10bar_cloudy_500_100000cm-1_toa.rad"
-    fname2 = "fig17_smart_spectra_pandora90bar_clouds_500_100000cm-1_toa.rad"
+    savetag = "fig17_new"
+    #fname1 = "fig17_smart_spectra_pandora10bar_cloudy_500_100000cm-1_toa.rad"
+    #fname2 = "fig17_smart_spectra_pandora90bar_clouds_500_100000cm-1_toa.rad"
+    fname1 = "PCb_Venus_10bar_toa.rad"
+    fname2 = "PCb_Venus_90bar_toa.rad"
+    Nstr = 4
     title1 = "10 bar Venus-like (Clouds)"
     title2 = "90 bar Venus-like (Clouds)"
     lammin = 0.3
@@ -36,7 +39,7 @@ def make_fig():
 
     # Make reflectance plot
     spc.plot_rad(fname, savetag=savetag, lammin=lammin, lammax=lammax, ylim=ylim,
-                 title=title, labels=None)
+                 title=title, labels=None, Nstr=Nstr)
 
     return
 #########################################

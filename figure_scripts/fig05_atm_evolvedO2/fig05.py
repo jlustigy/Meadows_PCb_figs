@@ -1,5 +1,5 @@
 """
-Figure 4
+Figure 5
 
 Author: Jacob Lustig-Yaeger
 """

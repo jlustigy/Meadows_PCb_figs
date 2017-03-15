@@ -7,12 +7,51 @@ from matplotlib import gridspec
 import matplotlib.cm as cmx
 import matplotlib.colors as colors
 
-__all__ = ["plot_single_atm", "add_atm_plot", "plot_double_atm", "plot_aerosol"]
+__all__ = ["plot_single_atm", "add_atm_plot", "plot_double_atm", "plot_aerosol",
+           "H2SO4_vapor_pandora"]
+
+def H2SO4_vapor_pandora(P, T):
+
+    #pascals -> atm
+    Pa_atm = 9.8e-6
+    P = P * Pa_atm
+
+    # 1 bar  = 1.01325 atm
+    bar = 1./1.01325
+
+    T0 = 340. #K
+    Tc = 905. #K
+    R = 8.314e7 #erg/K/mol
+    P0 = -(10156./T0)+16.259 #ln(atm)
+    W = 85. # assuming 85% H2SO4 by weight -- btw, the results make no sense if we assume this is supposed to be written as a decimal
+    H = 4.184 * 1.e7 * (23624.8 - (1.14208e8)/(4798.69 + (W - 105.315)**2.)) #ergs / mol
+    ppm = 4e-6 #ppm h2so4 in atmosphere (won't actually be constant through atmosphere, but all I really care about is what it is in the lower atmosphere up to the base of the cloud deck to determine where the cloud base would form.)
+
+    #ln partial pressure of h2so4 [atm]
+    h2so4 = P0 + 10156.*(-1./T + 1./T0 + 0.38/(Tc - T0) * ( 1. + np.log(T0/T) - T0/T)) - H/(R*T)
+
+    #in mmHg to compare to plot in Kulmala 1900 paper for validation -->
+    #works when we assume 100% H2SO4
+    h2so4_hg = np.exp(h2so4) * 760.
+
+    #for plot boundaries:
+    #bound = (np.exp(h2so4) > 1e-13) and (np.exp(h2so4) < 1e-4)
+
+    #pp = P*ppm
+    #Tb = T[bound]
+    #eh = np.exp(h2so4[bound])
+
+    return np.exp(h2so4) / ppm / Pa_atm, T
 
 def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
                  title=None, xlim=None, ylim=None, tlim=None, bbox_to_anchor=(1., 1.03),
-                 seed=0, legloc=None):
+                 seed=0, legloc=None, cond_curve=None):
     """
+
+    Parameters
+    ----------
+    cond_curve : tuple
+        Add condensation curve e.g. (P, T, "Name")
     """
 
     # Create new figure and axis or use the one provided
@@ -52,6 +91,10 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
 
     # Plot temperature structure
     axT.plot(T, P, color="black", label="Temperature", ls="--")
+
+    # Plot condenasation vapor pressure curve
+    if cond_curve is not None:
+        axT.plot(cond_curve[1], cond_curve[0], color="black", ls="dotted")
 
     # Create legend
     if legend:
@@ -166,7 +209,7 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
 def plot_single_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
                     title=None, plotdir="../../figures/", bbox_to_anchor=(1., 1.03),
                     xlim=None, ylim=None, tlim=None, seed=0, legend="custom",
-                    legloc=None):
+                    legloc=None, cond_curve=None):
     """
     """
 
@@ -176,7 +219,7 @@ def plot_single_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
     # Add atm plot
     add_atm_plot(P, T, gas_profiles, molec_names, ax0=ax, legend=legend,
                      title=title, bbox_to_anchor=bbox_to_anchor, xlim=xlim,
-                     ylim=ylim, tlim=tlim, seed=seed, legloc=legloc)
+                     ylim=ylim, tlim=tlim, seed=seed, legloc=legloc, cond_curve=cond_curve)
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
@@ -184,7 +227,7 @@ def plot_single_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
 def plot_double_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
                     title=None, plotdir="../../figures/", bbox_to_anchor=(1., 1.03),
                     xlim=None, ylim=None, tlim=None, legend="custom", seed=0,
-                    legloc=None):
+                    legloc=None, cond_curve=None):
     """
     """
 
@@ -194,10 +237,10 @@ def plot_double_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
     # Add atm plot
     add_atm_plot(P[0], T[0], gas_profiles[0], molec_names[0], ax0=ax[0], legend=legend,
                      title=title[0], bbox_to_anchor=bbox_to_anchor, xlim=xlim, ylim=ylim,
-                     tlim=tlim, seed=seed, legloc=legloc)
+                     tlim=tlim, seed=seed, legloc=legloc, cond_curve=cond_curve[0])
     add_atm_plot(P[1], T[1], gas_profiles[1], molec_names[1], ax0=ax[1], legend=legend,
                      title=title[1], xlim=xlim, ylim=ylim, tlim=tlim, seed=seed,
-                     legloc=legloc)
+                     legloc=legloc, cond_curve=cond_curve[1])
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')

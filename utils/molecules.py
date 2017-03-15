@@ -4,6 +4,11 @@ import numpy as np
 def colors_from_molecs(molecules):
     return
 
+def color_from_molecule(molecule):
+    if molecule == "H$_2$O":
+        return ""
+    return
+
 def tex_molecule(formula):
     """
     Create LaTeX compatible string for molecular formula from simple string

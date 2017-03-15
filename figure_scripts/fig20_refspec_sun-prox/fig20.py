@@ -22,7 +22,7 @@ def make_fig():
     title1 = "Sun/Proxima Comparison"
     plot_kwargs = [
         {"color" : "orange", "label" : "Earth-Sun", "alpha" : 0.7},
-        {"color" : "red", "label" : "Earth-Proxima", "alpha" : 0.7}
+        {"color" : "purple", "label" : "Earth-Proxima", "alpha" : 0.7}
     ]
     #title2 = "10 bar O$_2$ (Dessicated)"
     lammin = 0.1

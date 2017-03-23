@@ -22,7 +22,7 @@ def make_fig():
     seed = 0
     xlim = [1e-9, 1.1]
     ylim = [1e7, 1e-3]
-    tlim = [135, 365]
+    tlim = [145, 385]
 
     # Read in atm files
     atmpath = os.path.join(os.path.dirname(__file__),"model_outputs/", fname1)

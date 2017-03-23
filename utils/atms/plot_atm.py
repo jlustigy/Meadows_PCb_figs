@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 from scipy import integrate
 import matplotlib as mpl
@@ -6,6 +7,9 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import matplotlib.cm as cmx
 import matplotlib.colors as colors
+
+sys.path.append("../../")
+from utils import molecules
 
 __all__ = ["plot_single_atm", "add_atm_plot", "plot_double_atm", "plot_aerosol",
            "H2SO4_vapor_pandora"]
@@ -51,7 +55,7 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
     Parameters
     ----------
     cond_curve : tuple
-        Add condensation curve e.g. (P, T, "Name")
+        Add condensation curve e.g. (P, T, "Name", loc)
     """
 
     # Create new figure and axis or use the one provided
@@ -77,6 +81,8 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
 
     ax.plot(0,0,color="black", label="Temp.", ls="--")
 
+    # Set colors for each molecule
+    """
     colors = []
     for i in range(len(molec_names)):
         if i < 10:
@@ -84,6 +90,8 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
         else:
             ii = i - 10
         colors.append("C%i" %ii)
+    """
+    colors = molecules.colors_from_molecules(molec_names)
 
     # Plot gases
     for i in range(len(molec_names)):
@@ -94,7 +102,26 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
 
     # Plot condenasation vapor pressure curve
     if cond_curve is not None:
-        axT.plot(cond_curve[1], cond_curve[0], color="black", ls="dotted")
+        Pv, Tv = cond_curve[0], cond_curve[1]
+        ccc = molecules.color_from_molecule(cond_curve[2])
+        axT.plot(Tv, Pv, color=ccc, ls="dotted", zorder=1)
+        #axT.plot(Tv, Pv, "o", color=ccc, zorder=1)
+        # Labels
+        xmin, xmax = axT.axes.get_xlim()
+        xmask = (Tv > xmin) & (Tv < xmax)
+        if cond_curve[3] is None:
+            # Get random index
+            j = np.random.choice(np.arange(len(Tv)))
+        else:
+            # Grab y-index nearest user specified y-value
+            j = np.argmin(np.fabs(Pv - cond_curve[3]))
+        # Set x, y of text label
+        y, x = Pv[j], Tv[j]
+        # Place text
+        axT.text(x, y, cond_curve[2], va='center', ha='center',
+            color=ccc, fontsize=12, zorder=10,
+            bbox=dict(boxstyle="square", fc="w", ec="none"))
+
 
     # Create legend
     if legend:
@@ -193,6 +220,22 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
         # No legend
         pass
 
+    # Mark surface
+    ymin, ymax = axT.axes.get_ylim()
+    xmin, xmax = axT.axes.get_xlim()
+    # If the bottom of the plot is *appreciably* below the lowest pressure
+    if np.fabs(np.log10(ymin) - np.log10(np.max(P))) > 0.5:
+        # Denote the surface
+        axT.axhline(np.max(P), color="grey", lw=1.0, zorder=101)
+        axT.axhspan(ymin, np.max(P), facecolor="gainsboro", alpha=1., zorder=101)
+        # Place text
+        ymid = 10**((np.log10(ymin) + np.log10(np.max(P)))/2.)
+        #xmid = 10**((np.log10(xmin) + np.log10(xmax))/2.)
+        xmid = ((xmin + xmax)/2.)
+        axT.text(xmid, ymid, "Surface", va='center', ha='center',
+             color="black", fontsize=12, zorder=101,
+             bbox=dict(boxstyle="square", fc="w", ec="none"))
+
     # Add title
     if title is not None:
         title = r"\underline{%s}" %title
@@ -227,7 +270,7 @@ def plot_single_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
 def plot_double_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
                     title=None, plotdir="../../figures/", bbox_to_anchor=(1., 1.03),
                     xlim=None, ylim=None, tlim=None, legend="custom", seed=0,
-                    legloc=None, cond_curve=None):
+                    legloc=None, cond_curve=(None, None)):
     """
     """
 

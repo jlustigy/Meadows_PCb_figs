@@ -65,6 +65,10 @@ def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.3
     MzV    = 23.0
     MezV   = 22.0
 
+    N_IWA1 = 1.0
+    N_IWA2 = 2.0
+    N_IWA3 = 3.0
+
     if ground:
         set_fpa = 0.5
     else:
@@ -73,9 +77,9 @@ def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.3
     # set lammax to IWA = 1
     if iwa_lines:
         sep =  r / d # arcsec
-        iwa1 = 1.22 * (lamhr * 1e-6) / diam * 206265 # arcsec
-        iwa2 = 2. * (lamhr * 1e-6) / diam * 206265 # arcsec
-        iwa3 = 3. * (lamhr * 1e-6) / diam * 206265 # arcsec
+        iwa1 = N_IWA1 * (lamhr * 1e-6) / diam * 206265 # arcsec
+        iwa2 = N_IWA2 * (lamhr * 1e-6) / diam * 206265 # arcsec
+        iwa3 = N_IWA3 * (lamhr * 1e-6) / diam * 206265 # arcsec
         idy = np.argmin(np.abs(iwa1 - sep))
         lammax = lamhr[idy]
 
@@ -203,9 +207,9 @@ def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.3
     # Create vertical lines for IWA cutoffs
     if iwa_lines:
         sep =  r / d # arcsec
-        iwa1 = 1.22 * (lam * 1e-6) / diam * 206265 # arcsec
-        iwa2 = 2. * (lam * 1e-6) / diam * 206265 # arcsec
-        iwa3 = 3. * (lam * 1e-6) / diam * 206265 # arcsec
+        iwa1 = N_IWA1 * (lam * 1e-6) / diam * 206265 # arcsec
+        iwa2 = N_IWA2 * (lam * 1e-6) / diam * 206265 # arcsec
+        iwa3 = N_IWA3 * (lam * 1e-6) / diam * 206265 # arcsec
         idy1 = np.argmin(np.abs(iwa1 - sep))
         idy2 = np.argmin(np.abs(iwa2 - sep))
         idy3 = np.argmin(np.abs(iwa3 - sep))
@@ -252,7 +256,7 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
 
     lammin = 0.3
     lammax = 1.5
-    Tput = 0.05
+    Tput = 0.2  # Via Giada via Aki
     amin = 0.0
     amax = 150.0
     lw = 2.0

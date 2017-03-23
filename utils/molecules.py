@@ -1,13 +1,45 @@
 
 import numpy as np
 
-def colors_from_molecs(molecules):
-    return
+def colors_from_molecules(molecules):
+    colors = [color_from_molecule(m) for m in molecules]
+    return colors
 
 def color_from_molecule(molecule):
+    """
+    Converts a LaTeX worthy molecular formula to a matplotlib color
+    """
     if molecule == "H$_2$O":
-        return ""
-    return
+        return "C0"
+    elif molecule == "N$_2$":
+        return "deepskyblue"
+    elif molecule == "CO$_2$":
+        return "C1"
+    elif molecule == "O$_2$":
+        return "darkgreen"
+    elif molecule == "O$_3$":
+        return "mediumseagreen"
+    elif molecule == "CO":
+        return "lightcoral"
+    elif molecule == "HNO$_3$":
+        return "red"
+    elif molecule == "NO$_2$":
+        return "darkred"
+    elif molecule == "SO$_2$":
+        return "C7"
+    elif molecule == "OCS":
+        return "darkmagenta"
+    elif molecule == "H$_2$SO$_4$":
+        return "C6"
+    elif molecule == "CH$_4$":
+        return "gold"
+    elif molecule == "N$_2$O":
+        return "mediumturquoise"
+    elif molecule == "C$_2$H$_6$":
+        return "mediumvioletred"
+    else:
+        print "No color specified for %s" %molecule
+        return "black"
 
 def tex_molecule(formula):
     """

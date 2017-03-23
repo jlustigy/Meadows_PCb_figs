@@ -18,7 +18,7 @@ def make_fig():
     fname1 = "fig9_left_panel_archean.atm"
     fname2 = "fig9_right_panel_archean.atm"
     title1 = "Archean $1\%$ CH$_4$, $5\%$ CO$_2$"
-    title2 = "Archean $3\%$ CH$_4$, $5\%$ CO$_2$"
+    title2 = "Archean $1.5\%$ CH$_4$, $5\%$ CO$_2$"
     seed = 7
     xlim = [1e-8, 2]
     ylim = [1e5, 6e-3 ]

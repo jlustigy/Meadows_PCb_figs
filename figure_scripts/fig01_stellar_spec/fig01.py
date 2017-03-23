@@ -18,7 +18,7 @@ def make_fig():
     # Params specific to this plot
     savetag = "fig01"
     plotdir="../../figures/"
-    fname1 = "proxima_cen_1AU.txt"
+    fname1 = "proxima_cen_sed.txt"
     fname2 = "Kurucz1cm-1_susim_atlas2.dat"
 
     # Smoothing parameters
@@ -29,7 +29,7 @@ def make_fig():
 
     # Read in atm files
     path = os.path.join(os.path.dirname(__file__),"data_files/", fname1)
-    data = np.genfromtxt(path, skip_header=37)
+    data = np.genfromtxt(path, skip_header=25)
     wl_prox, flux_prox = data[:,0], data[:,1]*(1.0/0.0485)**2
     #flux_prox = savgol_filter(flux_prox, window1, poly1, mode='nearest')
 

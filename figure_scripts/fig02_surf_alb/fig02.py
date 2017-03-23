@@ -26,7 +26,7 @@ def make_fig():
             "name" : "Conifer Forest",
             "file" : "conifers.txt",
             "header" : 26,
-            "color" : "darkgreen",
+            "color" : "seagreen",
             "ls" : "-"
         },
         {
@@ -40,28 +40,28 @@ def make_fig():
             "name" : "Ice/Snow",
             "file" : "snow.txt",
             "header" : 26,
-            "color" : "lightblue",
+            "color" : "mediumturquoise",
             "ls" : "-"
         },
         {
             "name" : "Desert/Soil",
             "file" : "soil.txt",
             "header" : 26,
-            "color" : "red",
+            "color" : "gold",
             "ls" : "-"
         },
         {
             "name" : "Grassland",
             "file" : "grass.txt",
             "header" : 26,
-            "color" : "lightgreen",
+            "color" : "yellowgreen",
             "ls" : "-"
         },
         {
-            "name" : "Goethite",
-            "file" : "goethite.txt",
-            "header" : 102,
-            "color" : "darkred",
+            "name" : "Mars Avg",
+            "file" : "mars_avg.alb",
+            "header" : 1,
+            "color" : "sandybrown",
             "ls" : "-"
         },
         {

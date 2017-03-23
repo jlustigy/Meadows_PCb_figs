@@ -19,16 +19,18 @@ def make_fig():
     fname2 = "90barCO2_final.atm"
     title1 = "10 bar"
     title2 = "90 bar"
-    seed = 0
+    seed = 1
     xlim = [1e-8, 2.]
     ylim = [1e7, 1e-2]
     tlim = [155, 700]
+    legloc = [6e-2, 6e-2, 6e-2, 1e4, 6e-2, 6.3e5, 6e-2]
+    #legloc = [None, None, None, None, None, None, None]
 
     # Read in atm files
     atmpath = os.path.join(os.path.dirname(__file__),"model_outputs/", fname1)
-    data1 = np.genfromtxt(atmpath, skip_header=1)
+    data1 = np.genfromtxt(atmpath, skip_header=2)
     atmpath = os.path.join(os.path.dirname(__file__),"model_outputs/", fname2)
-    data2 = np.genfromtxt(atmpath, skip_header=1)
+    data2 = np.genfromtxt(atmpath, skip_header=2)
 
     # Parse atm data
     P1, T1, alt1 = data1[:,0], data1[:,1], data1[:,2]
@@ -47,18 +49,24 @@ def make_fig():
     Pv1, Tv1 = atm.H2SO4_vapor_pandora(P1, T1)
     Pv2, Tv2 = atm.H2SO4_vapor_pandora(P2, T2)
 
+    # Interpolate to a grid that extends to the surface
+    #mask = (Pv2 >= np.min(P1)) & (Pv2 <= np.max(P1))
+    Pv1_new = Pv2#[mask]#P110.**np.linspace(np.log10(1e-2), np.log10(1e6), 100)
+    Tv1_new = Tv2#[mask]#np.interp(Pv1_new, Pv2, Tv2)
+
     P = (P1, P2)
     T = (T1, T2)
     gas_profiles = (gas_profiles1, gas_profiles2)
     molec_names = (molec_names1, molec_names2)
     title = (title1, title2)
-    cond_curve = ((Pv1, Tv1, "H$_2$SO$_4$"), (Pv2, Tv2, "H$_2$SO$_4$"))
+    cond_curve = ( (Pv1_new, Tv1_new, "H$_2$SO$_4$", 1e5), (Pv2, Tv2, "H$_2$SO$_4$", 10000) )
 
     # Feed to plotting function
     #atm.add_atm_plot(P, T, gas_profiles, molec_names, legend=True, title=plot_title)
     atm.plot_double_atm(P, T, gas_profiles, molec_names, title=title,
                         savetag=savetag, xlim=xlim,
-                        ylim=ylim, tlim=tlim, seed=seed, cond_curve=cond_curve)
+                        ylim=ylim, tlim=tlim, seed=seed, cond_curve=cond_curve,
+                        legloc=legloc)
 
     return
 #########################################

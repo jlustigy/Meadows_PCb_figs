@@ -23,7 +23,7 @@ def make_fig():
     xlim = [1e-8, 2.]
     ylim = [1e7, 1e-2]
     tlim = [155, 700]
-    legloc = [6e-2, 6e-2, 6e-2, 1e4, 6e-2, 6.3e5, 6e-2]
+    legloc = [6e-2, 6e-2, 6e-2, 1e4, 2e6, 6.3e5, 6e-2]
     #legloc = [None, None, None, None, None, None, None]
 
     # Read in atm files

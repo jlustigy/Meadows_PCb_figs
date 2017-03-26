@@ -5,23 +5,58 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import os
 
-__all__ = ["add_coronagraph_axes", "plot_coronagraph"]
+import sys
+sys.path.append("../")
+from utils import molecules, fig_params, spectra
 
-def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.35, lammax=3.0,
+__all__ = ["add_coronagraph_axes", "plot_coronagraph", "parse_from_phase",
+           "parse_from_rad", "plot_coronagraph_mod", "plot_coronagraph_mod2"]
+
+def parse_from_phase(output, alpha, phase=90):
+    """
+    """
+
+    # Parse output
+    i=0
+    lam = output[i][0][:,:]
+    sol = output[i][1][:,:]
+    rad = output[i][2][:,:]
+    alb = output[i][3][:,:]
+
+    # Get closest alpha to phase
+    idx = np.argmin(np.abs(alpha - phase))
+
+    # Select phase
+    lam = lam[idx,::-1]
+    sol = sol[idx,::-1]
+    rad = rad[idx,::-1]
+
+
+    return lam, sol, rad
+
+def parse_from_rad(output, phase=90):
+    """
+    """
+
+    # Parse output
+    lam, wno, sol, toaf, rads = output
+
+    # convert flux to radiance
+    rad = toaf/np.pi
+
+    # multiply by lambertian phase function to approximate disk-integrated
+    # radiance at given phase
+    rad = rad * cg.teleplanstar.lambertPhaseFunction(phase)
+
+    return lam, sol, rad
+
+def add_coronagraph_axes(lamhr, sol, rad, phase=90., diam=30., lammin=0.35, lammax=3.0,
                     ref_lam=0.76, wantsnr=10.0, itime=None, Tput=0.2, saveplot=False, title="30m",
                     iwa_lines=True, ax1=None, ax2=None, Tsys=300., Tdet=50.,
                     ground=False, ytype="FpFs"):
 
     lw = 2.0
     mpl.rcParams['font.size'] = 20.0
-
-    # index of phase
-    idx = np.argmin(np.abs(alpha - phase))
-
-    # Select phase
-    lamhr = lamhr[idx,::-1]
-    sol = sol[idx,::-1]
-    rad = rad[idx,::-1]
 
     # Filter NaNs
     mask = np.isfinite(rad) & np.isfinite(sol)
@@ -192,7 +227,7 @@ def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.3
 
     # Draw plot
     ax2.plot(lam, yspec*ystretch, lw=2.0, color="purple", alpha=0.7, ls="steps-mid")
-    ax2.errorbar(lam, spec*ystretch, yerr=sig*ystretch, fmt='o', color='k', ms=5.0)
+    ax2.errorbar(lam, spec*ystretch, yerr=sig*ystretch, fmt='o', color='k', ms=4.0)
 
     # Set labels
     ax2.set_ylabel(ylabel)
@@ -251,8 +286,8 @@ def add_coronagraph_axes(lamhr, sol, rad, alpha, phase=90., diam=30., lammin=0.3
 
     return ax1, ax2
 
-def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
-                     plotdir="../../figures/", ytype="FpFs"):
+def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag="fig",
+                         plotdir="../../figures/", ytype="FpFs"):
 
     lammin = 0.3
     lammax = 1.5
@@ -260,13 +295,6 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
     amin = 0.0
     amax = 150.0
     lw = 2.0
-
-    i=0
-
-    lam = output[i][0][:,:]
-    sol = output[i][1][:,:]
-    rad = output[i][2][:,:]
-    alb = output[i][3][:,:]
 
     fig = plt.figure(figsize=(20,10))
     gs = gridspec.GridSpec(2,3)
@@ -280,7 +308,7 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
 
 
     # Plot luvoir
-    ax2,ax3 = add_coronagraph_axes(lam, sol, rad, alpha,
+    ax2,ax3 = add_coronagraph_axes(lam, sol, rad,
                                Tput=Tput, diam=16.0,
                                title="LUVOIR 16m",
                                ax1=ax2, ax2=ax3, Tsys=200.0, Tdet=50.0,
@@ -289,7 +317,7 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
     ax2.set_title("LUVOIR 16m")
 
     # Plot HabEx
-    ax0, ax1 = add_coronagraph_axes(lam, sol, rad, alpha,
+    ax0, ax1 = add_coronagraph_axes(lam, sol, rad,
                                 Tput=Tput, diam=6.5,
                                 title="HabEx 6.5m",
                                 ax1=ax0, ax2=ax1, Tsys=200.0, Tdet=50.0,
@@ -298,7 +326,7 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
     ax0.set_title("HabEx 6.5m")
 
     # Plot 30m Ground w/IWA lines
-    ax4, ax5 = add_coronagraph_axes(lam, sol, rad, alpha,
+    ax4, ax5 = add_coronagraph_axes(lam, sol, rad,
                                        Tput=Tput, title="Ground-Based 30m",
                                        lammin = 0.35, lammax = 1.5,
                                        ax1=ax4, ax2=ax5, iwa_lines=True,
@@ -315,5 +343,134 @@ def plot_coronagraph(alpha, output, wantsnr=20.0, itime=None, savetag="fig",
     # Save plot
     fig.tight_layout()
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
-    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
+    #fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
+    print "Saved:", savetag
+
+def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag="fig",
+                         plotdir="../../figures/", ytype="FpFs"):
+
+    lammin = 0.3
+    lammax = 1.5
+    Tput = 0.2  # Via Giada via Aki
+    amin = 0.0
+    amax = 150.0
+    lw = 2.0
+
+    fig = plt.figure(figsize=(15,25))
+    gs = gridspec.GridSpec(8,1, height_ratios=[1.,1.,.5 ,1.,1.,.5,1.,1.])
+    ax0 = plt.subplot(gs[0])
+    ax1 = plt.subplot(gs[1])
+    #axa = plt.subplot(gs[2])#
+    ax2 = plt.subplot(gs[3])
+    ax3 = plt.subplot(gs[4])
+    #axb = plt.subplot(gs[5])#
+    ax4 = plt.subplot(gs[6])
+    ax5 = plt.subplot(gs[7])
+    plt.subplots_adjust(wspace=0.07, hspace=0.0)
+
+
+    # Plot luvoir
+    ax2,ax3 = add_coronagraph_axes(lam, sol, rad,
+                               Tput=Tput, diam=16.0,
+                               title="LUVOIR 16m",
+                               ax1=ax2, ax2=ax3, Tsys=200.0, Tdet=50.0,
+                               ground=False, wantsnr=wantsnr, itime=itime,
+                               ytype=ytype)
+    ax2.set_title("LUVOIR 16m")
+
+    # Plot HabEx
+    ax0, ax1 = add_coronagraph_axes(lam, sol, rad,
+                                Tput=Tput, diam=6.5,
+                                title="HabEx 6.5m",
+                                ax1=ax0, ax2=ax1, Tsys=200.0, Tdet=50.0,
+                                ground=False, wantsnr=wantsnr, itime=itime,
+                                ytype=ytype)
+    ax0.set_title("HabEx 6.5m")
+
+    # Plot 30m Ground w/IWA lines
+    ax4, ax5 = add_coronagraph_axes(lam, sol, rad,
+                                       Tput=Tput, title="Ground-Based 30m",
+                                       lammin = 0.35, lammax = 1.5,
+                                       ax1=ax4, ax2=ax5, iwa_lines=True,
+                                       Tsys=269.0, Tdet=50.0, ground=True,
+                                       wantsnr=wantsnr, itime=itime,
+                                       ytype=ytype
+                                       )
+    ax4.set_title("Ground-Based 30m")
+
+    # Plot 30m Ground
+    #fig = plot_coronagraph_ground(lam, sol, rad, Tput=0.05, title="Ground-Based 30m", wantsnr=20, lammin=0.3, lammax=1.5,
+    #                              iwa_lines=False)
+
+    # Save plot
+    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+    #fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
+    print "Saved:", savetag
+
+def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag="fig",
+                         plotdir="../../figures/", ytype="FpFs"):
+
+    lammin = 0.3
+    lammax = 1.5
+    Tput = 0.2  # Via Giada via Aki
+    amin = 0.0
+    amax = 150.0
+    lw = 2.0
+
+    fig = plt.figure(figsize=(20,20))
+    gs = gridspec.GridSpec(3,2)#, height_ratios=[1.,1.,.5 ,1.,1.,.5,1.,1.])
+    ax0 = plt.subplot(gs[1])
+    ax1 = plt.subplot(gs[0])
+    #axa = plt.subplot(gs[2])#
+    ax2 = plt.subplot(gs[3])
+    ax3 = plt.subplot(gs[2])
+    #axb = plt.subplot(gs[5])#
+    ax4 = plt.subplot(gs[5])
+    ax5 = plt.subplot(gs[4])
+    plt.subplots_adjust(wspace=0.15, hspace=0.15)
+
+    ax0.set_xlabel(r"Wavelength [$\mu$m]")
+    ax1.set_xlabel(r"Wavelength [$\mu$m]")
+    ax2.set_xlabel(r"Wavelength [$\mu$m]")
+    ax3.set_xlabel(r"Wavelength [$\mu$m]")
+    ax4.set_xlabel(r"Wavelength [$\mu$m]")
+    ax5.set_xlabel(r"Wavelength [$\mu$m]")
+
+
+    # Plot luvoir
+    ax2,ax3 = add_coronagraph_axes(lam, sol, rad,
+                               Tput=Tput, diam=16.0,
+                               title="LUVOIR 16m",
+                               ax1=ax2, ax2=ax3, Tsys=200.0, Tdet=50.0,
+                               ground=False, wantsnr=wantsnr, itime=itime,
+                               ytype=ytype)
+    #ax2.set_title("LUVOIR 16m")
+
+    # Plot HabEx
+    ax0, ax1 = add_coronagraph_axes(lam, sol, rad,
+                                Tput=Tput, diam=6.5,
+                                title="HabEx 6.5m",
+                                ax1=ax0, ax2=ax1, Tsys=200.0, Tdet=50.0,
+                                ground=False, wantsnr=wantsnr, itime=itime,
+                                ytype=ytype)
+    #ax0.set_title("HabEx 6.5m")
+
+    # Plot 30m Ground w/IWA lines
+    ax4, ax5 = add_coronagraph_axes(lam, sol, rad,
+                                       Tput=Tput, title="Ground-Based 30m",
+                                       lammin = 0.35, lammax = 1.5,
+                                       ax1=ax4, ax2=ax5, iwa_lines=True,
+                                       Tsys=269.0, Tdet=50.0, ground=True,
+                                       wantsnr=wantsnr, itime=itime,
+                                       ytype=ytype
+                                       )
+    #ax4.set_title("Ground-Based 30m")
+
+    # Plot 30m Ground
+    #fig = plot_coronagraph_ground(lam, sol, rad, Tput=0.05, title="Ground-Based 30m", wantsnr=20, lammin=0.3, lammax=1.5,
+    #                              iwa_lines=False)
+
+    # Save plot
+    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+    #fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
     print "Saved:", savetag

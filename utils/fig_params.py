@@ -23,4 +23,4 @@ def set_atm_figsize():
     mpl.rcParams['figure.figsize'] = (7,8)
 
 def set_spectrum_figsize():
-    mpl.rcParams['figure.figsize'] = (16,8)
+    mpl.rcParams['figure.figsize'] = (14,6)

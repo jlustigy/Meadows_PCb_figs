@@ -12,10 +12,10 @@ from scipy.interpolate import interp1d
 
 import sys
 sys.path.append("../")
-from utils import molecules
+from utils import molecules, fig_params
 
 __all__ = ["read_rad", "plot_rad", "add_trans_plot", "weight_spectra", "plot_trans",
-           "read_transit"]
+           "read_transit", "plot_transmittance"]
 
 def read_rad(path, Numu=4, Nazi=1):
     """
@@ -492,3 +492,53 @@ def plot_trans(fname, savetag="refl_test", lammin=0.2, lammax=20.0, radius=(6850
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
 
     return
+
+def read_surf_rad(path, Nrow=14):
+    """
+    Parameters
+    ----------
+    path : str
+        Path/name of file (*sur.rad)
+    Nrow : int
+        Number of elements in a row
+    """
+
+
+    # Convert each line to vector, compose array of vectors
+    arrays = np.array([np.array(map(float, line.split())) for line in open(path)])
+
+    # Flatten and reshape into rectangle grid
+    arr = np.hstack(arrays).reshape((Nrow, -1), order='F')
+
+    # Parse columns
+    lam   = arr[0,:]
+    wno   = arr[1,:]
+    solar = arr[2,:]
+    direct = arr[3,:]
+    sky = arr[4,:]
+
+    return lam, wno, solar, direct, sky
+
+def plot_transmittance(fname, lammin=0.0, lammax=10.0, ylim=[0.0,1.0],
+                       title="", plotdir="../../figures/", savetag="transmittance_test"):
+    """
+    """
+
+    # Read in file
+    lam, wno, solar, direct, sky = read_surf_rad(fname)
+
+    # Compute transmittance
+    transmit = direct/solar
+
+    # Make plot
+    fig_params.set_spectrum_figsize()
+    fig, ax = plt.subplots()
+    ax.plot(lam, transmit, lw=2.0, color="black")
+    ax.set_xlabel(r"Wavelength [$\mu$m]")
+    ax.set_ylabel(r"Transmittance")
+    ax.set_title(title)
+    ax.set_xlim(lammin, lammax)
+    ax.set_ylim(ylim)
+
+    # Save
+    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')

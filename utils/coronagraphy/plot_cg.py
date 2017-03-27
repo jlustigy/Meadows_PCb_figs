@@ -304,6 +304,8 @@ def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag=
     ax3 = plt.subplot(gs[4])
     ax4 = plt.subplot(gs[2])
     ax5 = plt.subplot(gs[5])
+    snr_axes = [ax0, ax4, ax2]
+    spc_axes = [ax1, ax3, ax5]
     plt.subplots_adjust(wspace=0.07, hspace=0.07)
 
 
@@ -340,6 +342,15 @@ def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag=
     #fig = plot_coronagraph_ground(lam, sol, rad, Tput=0.05, title="Ground-Based 30m", wantsnr=20, lammin=0.3, lammax=1.5,
     #                              iwa_lines=False)
 
+    # Put all top plots on same yaxis
+    ymax_max = 0.0
+    for ax_tmp in snr_axes:
+        ymin, ymax = ax_tmp.get_ylim()
+        if ymax > ymax_max:
+            ymax_max = ymax
+    for ax_tmp in snr_axes:
+            ax_tmp.set_ylim([1.0, ymax])
+
     # Save plot
     fig.tight_layout()
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
@@ -366,6 +377,7 @@ def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, save
     #axb = plt.subplot(gs[5])#
     ax4 = plt.subplot(gs[6])
     ax5 = plt.subplot(gs[7])
+    snr_axes = [ax0, ax2, ax4]
     plt.subplots_adjust(wspace=0.07, hspace=0.0)
 
 
@@ -402,6 +414,15 @@ def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, save
     #fig = plot_coronagraph_ground(lam, sol, rad, Tput=0.05, title="Ground-Based 30m", wantsnr=20, lammin=0.3, lammax=1.5,
     #                              iwa_lines=False)
 
+    # Put all top plots on same yaxis
+    ymax_max = 0.0
+    for ax_tmp in snr_axes:
+        ymin, ymax = ax_tmp.get_ylim()
+        if ymax > ymax_max:
+            ymax_max = ymax
+    for ax_tmp in snr_axes:
+            ax_tmp.set_ylim([1.0, ymax])
+
     # Save plot
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
     #fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
@@ -427,6 +448,7 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
     #axb = plt.subplot(gs[5])#
     ax4 = plt.subplot(gs[5])
     ax5 = plt.subplot(gs[4])
+    snr_axes = [ax0, ax2, ax4]
     plt.subplots_adjust(wspace=0.15, hspace=0.15)
 
     ax0.set_xlabel(r"Wavelength [$\mu$m]")
@@ -469,6 +491,15 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
     # Plot 30m Ground
     #fig = plot_coronagraph_ground(lam, sol, rad, Tput=0.05, title="Ground-Based 30m", wantsnr=20, lammin=0.3, lammax=1.5,
     #                              iwa_lines=False)
+
+    # Put all top plots on same yaxis
+    ymax_max = 0.0
+    for ax_tmp in snr_axes:
+        ymin, ymax = ax_tmp.get_ylim()
+        if ymax > ymax_max:
+            ymax_max = ymax
+    for ax_tmp in snr_axes:
+            ax_tmp.set_ylim([1.0, ymax])
 
     # Save plot
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')

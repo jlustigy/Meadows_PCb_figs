@@ -14,11 +14,13 @@ def make_fig():
     from utils import fig_params
     import utils.phasecurves as pcs
     import utils.coronagraphy as pcg
+    import utils.spectra as spc
 
     # Params specific to this plot
-    savetag = "fig30_FpFs_1.2hr"
+    savetag = "fig30"
+    frad = "profile_o2lb_10bar_dry.pt_filtered_hitran2012_50_100000cm_toa.rad"
     ytype = "FpFs"
-    itime = 1.2    # Exposure time
+    itime = 10.    # Exposure time
     wantsnr = 20.0  # Desired signal-to-noise ratio
 
     # More general params
@@ -30,7 +32,23 @@ def make_fig():
     output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
 
     # Make plot
+    """
     pcg.plot_coronagraph(alpha, output1, savetag=savetag, itime=itime, wantsnr=wantsnr, ytype=ytype)
+    """
+
+    # Plot disk-integrated spectral at 90 deg
+    lamhr, sol, rad = pcg.parse_from_phase(output1, alpha, phase=90)
+    pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_disk", itime=itime, wantsnr=wantsnr, ytype=ytype)
+
+    # Using rad file...
+    path = os.path.join(os.path.dirname(__file__), frad)
+    output = spc.read_rad(path, Numu=4, Nazi=1)
+    lamhr, sol, rad = pcg.parse_from_rad(output, phase=90)
+
+    # Plot v1
+    pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    pcg.plot_coronagraph_mod(lamhr, sol, rad, savetag=savetag+"_v2_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    pcg.plot_coronagraph_mod2(lamhr, sol, rad, savetag=savetag+"_v3_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
 
     return
 #########################################

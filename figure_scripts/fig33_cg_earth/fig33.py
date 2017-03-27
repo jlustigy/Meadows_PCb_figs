@@ -1,5 +1,5 @@
 """
-Figure 29: Wet high O2 coronagraph plot
+Figure 33: Earth-like
 
 Author: Jacob Lustig-Yaeger
 """
@@ -17,10 +17,10 @@ def make_fig():
     import utils.spectra as spc
 
     # Params specific to this plot
-    savetag = "fig29"
-    frad = "profile_o2lb_10bar_h2o.pt_filtered_hitran2012_50_100000cm_toa.rad"
+    savetag = "fig33"
+    frad = "profile_earth_prox.pt_combined_hitran2012_50_100000cm_toa.rad"
     ytype = "FpFs"
-    itime = 10.0    # Exposure time
+    itime = 10.    # Exposure time
     wantsnr = 20.0  # Desired signal-to-noise ratio
 
     # More general params
@@ -33,7 +33,7 @@ def make_fig():
 
     # Make plot
     """
-    pcg.plot_coronagraph(alpha, output1, savetag=savetag+"_old", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    pcg.plot_coronagraph(alpha, output1, savetag=savetag, itime=itime, wantsnr=wantsnr, ytype=ytype)
     """
 
     # Plot disk-integrated spectral at 90 deg

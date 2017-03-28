@@ -42,9 +42,15 @@ def make_fig():
                                 iout=iout, savetag=savetag+"_orig")
     """
 
+    """
     pcs.plot_binned_phasecurves_new(alpha, output1, output2, output3,
                                 R=R, lammin=lammin, lammax=lammax,
                                 iout=iout, savetag=savetag+"_new")
+    """
+
+    pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
+                                R=R, lammin=lammin, lammax=lammax,
+                                iout=iout, savetag=savetag+"_miri")
 
     return
 #########################################

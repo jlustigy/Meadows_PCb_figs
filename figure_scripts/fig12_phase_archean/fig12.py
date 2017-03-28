@@ -36,9 +36,15 @@ def make_fig():
     output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
 
     # Make plot
+    """
     pcs.plot_binned_phasecurves(alpha, output1, output2, output3,
                                 R=R, lammin=lammin, lammax=lammax,
                                 iout=iout, savetag=savetag)
+    """
+
+    pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
+                                R=R, lammin=lammin, lammax=lammax,
+                                iout=iout, savetag=savetag+"_miri")
 
     return
 #########################################

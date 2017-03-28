@@ -11,7 +11,8 @@ import coronagraph as cg
 
 __all__ = ["read_one_phasecurve", "read_phasecurves", "plot_disk_integrated_spec",
            "plot_alb_phase", "plot_rad_phase", "plot_phasecurve", "open_phase_dir",
-           "phase_phots", "plot_binned_phasecurves", "plot_binned_phasecurves_new"]
+           "phase_phots", "plot_binned_phasecurves", "plot_binned_phasecurves_new",
+           "plot_binned_phasecurves_miri"]
 
 def colorize(vector,cmap='plasma', vmin=None, vmax=None):
     """Convert a vector to RGBA colors.
@@ -805,6 +806,113 @@ def plot_miri_filters(wl, filters, names, ax=None, ylim=[0.0,1.0]):
     ax1.set_ylim(ylim)
     plt.show()
 
+def custom_phase_phots(lam_in, sol_in, rad_in, alb_in, alpha, lam, dlam,
+              amax = 180.,
+              amin = 0.,
+              R = 20., Tput=1.0):
+    """
+    For use with user-defined wavelength grid
+    """
+
+    # Create wavelength grid
+    lamlo, dlamlo = lam, dlam
+
+    # Meaningless, only here so it doesn't crash
+    lammin, lammax = np.min(lamlo), np.max(lamlo)
+
+    # Set sys params
+    a = 0.0485  # AU
+    d = 1.302   # pc
+    Rp = 1.074  # 6849 km
+    Rearth = 6378. # km/Rearth
+    au = 1.496e8   # km/AU
+    pc = 3.086e13  # km/pc
+
+    # Create lists to hold data
+    Fp = np.zeros([len(alpha), len(lamlo)])
+    Fs = np.zeros([len(alpha), len(lamlo)])
+    Fpp = np.zeros([len(alpha), len(lamlo)])
+    Fsp = np.zeros([len(alpha), len(lamlo)])
+    Nsarr = np.zeros([len(alpha), len(lamlo)])
+    Nparr = np.zeros([len(alpha), len(lamlo)])
+    cplan = np.zeros([len(alpha), len(lamlo)])
+    cstar = np.zeros([len(alpha), len(lamlo)])
+    Fphi = np.zeros([len(alpha), len(lam_in[0,:])])
+    Fshi = np.zeros([len(alpha), len(lam_in[0,:])])
+
+    for j in range(len(alpha)):
+
+        # Select phase
+        phase = alpha[j]
+        lam = lam_in[j,:]
+        sol = sol_in[j,:]
+        rad = rad_in[j,:]
+        alb = alb_in[j,:]
+
+        # Use stellar BB beyond 5.5 microns
+        sol = fix_stellar_flux(lam, sol)
+
+        # Filter NaNs
+        #nanmask = np.isfinite(rad) & np.isfinite(sol)
+        #lam = lam[nanmask]
+        #sol = sol[nanmask]
+        #rad = rad[nanmask]
+        #alb = alb[nanmask]
+
+        # Energy Flux
+        Ftoa = rad * np.pi # W/m^2/um
+        Fp_earth = Ftoa * (Rp * Rearth)**2. / ((d * pc)**2.)
+        Fs_earth = sol * ((a * au)/(d * pc))**2.
+        Fps_earth = Fp_earth + Fs_earth # W/m^2/um
+
+        Fphi[j,:] = Fp_earth
+        Fshi[j,:] = Fs_earth
+
+        # photon flux
+        Fp_phot = F_photons(Fp_earth, lam)
+        Fs_phot = F_photons(Fs_earth, lam)
+        Fps_phot = Fp_phot + Fs_phot
+
+        # Exposure time
+        period = 11.186 # days
+        Nobs = len(alpha)
+        texp = period * 24. * 3600. / Nobs # seconds
+
+        # Total photons
+        A = 25. # Collecting Area [m**2]
+        T = 1.0 # Throughput
+        Np = Fp_phot * A * texp / R
+        Ns = Fs_phot * A * texp / R
+
+        # Integrate photons at high resolution
+        mask = (lam > (lammin - 0.5*lammin/R)) & (lam < (lammax + 0.5*lammax/R))
+        iNp_hr = integrate.trapz(Np[mask][::-1], x=lam[mask][::-1])
+        iNs_hr = integrate.trapz(Ns[mask][::-1], x=lam[mask][::-1])
+
+
+        # Degrade spectrum
+        Fp[j,:] = cg.degrade_spec(Fp_earth, lam, lamlo, dlam=dlamlo)
+        Fs[j,:] = cg.degrade_spec(Fs_earth, lam, lamlo, dlam=dlamlo)
+        Fpp[j,:] = cg.degrade_spec(Fp_phot, lam, lamlo, dlam=dlamlo)
+        Fsp[j,:] = cg.degrade_spec(Fs_phot, lam, lamlo, dlam=dlamlo)
+        Nparr[j,:] = cg.degrade_spec(Np, lam, lamlo, dlam=dlamlo)
+        Nsarr[j,:] = cg.degrade_spec(Ns, lam, lamlo, dlam=dlamlo)
+
+        # Integrate photons at low resolution
+        iNp_lr = integrate.trapz(Nparr[j,:], x=lamlo)
+        iNs_lr = integrate.trapz(Nsarr[j,:], x=lamlo)
+
+        #print "Ratio of integrated planet photons (hr/lr) =", iNp_hr / iNp_lr
+        #print "Ratio of integrated stellar photons (hr/lr) =", iNs_hr / iNs_lr
+        #print "-----------------"
+
+        # photon count rate
+        T = Tput # Throughput
+        cplan[j,:] = cphot(Fp[j,:], lamlo, A, T, R)
+        cstar[j,:] = cphot(Fs[j,:], lamlo, A, T, R)
+
+    return lamlo, dlamlo, Nsarr, Nparr, Fsp, Fpp, Fs, Fp, [lam, Fphi, Fshi], cplan, cstar
+
 def plot_binned_phasecurves_new(alpha, output1, output2, output3, iout=0, savetag="fig",
                             amin=0.0, amax=180.0, iout20=0, plotdir="../../figures/",
                             R=3, lammin=6.5, lammax=26.3):
@@ -933,6 +1041,158 @@ def plot_binned_phasecurves_new(alpha, output1, output2, output3, iout=0, saveta
     ax0.set_ylim([ymin, ymax])
     #ax1.set_ylim([ymin, ymax])
 
+
+    # Save plot
+    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+    print "Saved:", savetag
+
+    return
+
+def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savetag="fig",
+                            amin=0.0, amax=180.0, iout20=0, plotdir="../../figures/",
+                            R=3, lammin=6.5, lammax=26.3):
+    """
+    Creates binned phasecurve plots (used in Meadows et al. paper)
+
+    Parameters
+    ----------
+    alpha : ndarray
+        Planetary phase grid [degrees]
+    output1 : list
+        No T contrast phasecurves read-in from open_phase_dir()
+    output2 : list
+        No nightside flux phasecurves read-in from open_phase_dir()
+    output3 : list
+        20K cooler nightside phasecurves read-in from open_phase_dir()
+    iout : int (optional)
+        index corresponding to which simulation if multiple exist in dir
+    iout20 : int (optional)
+        index corresponding to which simulation if multiple exist in dir for 20K
+    savetag : str
+        naming convention for saved figures
+    lammin : float (optional)
+        Minimum wavelength [um]
+    lammax : float (optional)
+        Maximum wavelength [um]
+    amin : float (optional)
+        Minimum phase angle [deg]
+    amax : float (optional)
+        Maximum phase angle [deg]
+    R : float (optional)
+        Telescope resolving power (lam/dlam)
+    plotdir : str (optional)
+        Relative location to save plots
+    """
+
+    miri_phot_wl = np.array([10., 11.3, 12.8, 15.0, 18.0, 21.0, 25.0])
+    miri_phot_dwl = np.array([2.0, 0.7, 2.4, 3.0, 3.0, 5.0, 4.0])
+    miri_names = np.array(["F1000W", "F1130W", "F1280W", "F1500W", "F1800W", "F2100W", "F2550W"])
+    Tput = 0.27
+
+    lamlo1, dlamlo1, Nsarr1, Nparr1, Fsp1, Fpp1, Fs1, Fp1, hires1, cplan1, cstar1 = \
+    custom_phase_phots(output1[iout][0],output1[iout][1],output1[iout][2],output1[iout][3], \
+                alpha, miri_phot_wl, miri_phot_dwl, Tput=Tput)
+
+    lamlo2, dlamlo2, Nsarr2, Nparr2, Fsp2, Fpp2, Fs2, Fp2, hires2, cplan2, cstar2 = \
+    custom_phase_phots(output2[iout][0],output2[iout][1],output2[iout][2],output2[iout][3], \
+                alpha, miri_phot_wl, miri_phot_dwl, Tput=Tput)
+
+    # No "iout here b/c currently only one case per planet type"
+    lamlo3, dlamlo3, Nsarr3, Nparr3, Fsp3, Fpp3, Fs3, Fp3, hires3, cplan3, cstar3 = \
+    custom_phase_phots(output3[iout20][0],output3[iout20][1],output3[iout20][2],output3[iout20][3], \
+                alpha, miri_phot_wl, miri_phot_dwl, Tput=Tput)
+
+    lamlo = lamlo1
+    dlamlo = dlamlo1
+
+    lamhi1 = hires1[0]
+    Fpe1 = hires1[1]
+    Fse1 = hires1[2]
+
+    lamhi2 = hires2[0]
+    Fpe2 = hires2[1]
+    Fse2 = hires2[2]
+
+    lamhi3 = hires3[0]
+    Fpe3 = hires3[1]
+    Fse3 = hires3[2]
+
+    xaxlammin = lamlo[0] - dlamlo[0] - dlamlo[0]/10
+    xaxlammax = lamlo[-1] + dlamlo[-1] + dlamlo[-1]/10
+
+    yaxlammin = lamlo[0] - dlamlo[0]/2
+    yaxlammax = lamlo[-1] + dlamlo[-1]/2
+
+    lmask = (lamhi2 > xaxlammin) & (lamhi2 < xaxlammax)
+    lmask2 = (lamhi2 > yaxlammin) & (lamhi2 < yaxlammax)
+    amask = (alpha >= amin) & (alpha <= amax)
+
+    colors1 = colorize(np.arange(len(lamlo)))[0]
+    colors2 = colorize(np.arange(len(alpha[amask])), cmap="viridis")[0]
+
+    #"""
+    fig, ax = plt.subplots(figsize=(14,8))
+    #plt.subplots_adjust(wspace=0.05, hspace=0.0)
+    #ax0 = plt.subplot(gs[0])
+    ax1 = ax
+    left, bottom, width, height = [0.125, 0.48, 0.3, 0.4]
+    ax0 = fig.add_axes([left, bottom, width, height])
+    #"""
+
+    # Set axis labels
+    ax0.set_ylabel(r"Planet/Star Contrast")
+    ax0.set_xlabel(r"Phase [deg]")
+    ax0.semilogy()
+    #ax0.yaxis.tick_right()
+    #ax0.yaxis.set_label_position("right")
+    ax0.xaxis.tick_top()
+    ax0.xaxis.set_label_position("top")
+    for i in range(len(lamlo)):
+        #ax0.plot(alpha, Fp1[:,i]/Fs1[:,i], lw=2.0, c=colors1[i], ls="-", label=r"$%.1f\mu$m" % lamlo[i])
+        ax0.plot(alpha, Fp2[:,i]/Fs2[:,i], lw=2.0, c=colors1[i], ls="-")
+        ax0.plot(alpha, Fp3[:,i]/Fs3[:,i], lw=2.0, c=colors1[i], ls="dotted")
+        #ax0.fill_between(alpha, Fp1[:,i]/Fs1[:,i], Fp2[:,i]/Fs2[:,i], color=colors1[i], alpha=0.1)
+        #ax1.axvspan(lamlo[i] - 0.5*dlamlo[i], lamlo[i] + 0.5*dlamlo[i], color=colors1[i], alpha=0.1, label=miri_names[i])
+        #ax1.axvline(lamlo[i] - 0.5*dlamlo[i], c=colors1[i], ls="-", lw=1.0)
+        #ax1.axvline(lamlo[i] + 0.5*dlamlo[i], c=colors1[i], ls="-", lw=1.0)
+    #leg=ax0.legend(loc=0, fontsize=16, ncol=2)
+    #leg.get_frame().set_alpha(0.0)
+
+    # Plot full phase
+    ifull = find_nearest(alpha, 0.0)
+    inew = find_nearest(alpha, 180.0)
+    yarr_max= 1e6*(Fpe2[ifull,lmask] - Fpe2[inew,lmask]) / Fse2[inew,lmask]
+    yarr_maxlo= 1e6*(Fp2[ifull,:] - Fp2[inew,:]) / Fs2[inew,:]
+    yarr_20= 1e6*(Fpe3[ifull,lmask] - Fpe3[inew,lmask]) / Fse3[inew,lmask]
+    ylabel = r"Day $-$ Night Flux Contrast [ppm]"
+    # Set axis labels
+    ax1.set_ylabel(ylabel, rotation=270, labelpad=30)
+    ax1.set_xlabel(r"Wavelength [$\mu$m]")
+    ax1.yaxis.tick_right()
+    ax1.yaxis.set_label_position("right")
+
+    ax1.plot(lamhi2[lmask], yarr_max, lw=2.0, c="black", label="Max")
+    ax1.plot(lamhi3[lmask], yarr_20, lw=2.0, c="black", alpha=0.5, label=r"$\Delta T = 20$K")
+
+    #ax1.semilogy()
+
+    ymin = np.nanmin(Fpe2[i,lmask2]/Fse2[i,lmask2])
+    ymax = np.nanmax(Fpe2[i,lmask]/Fse2[i,lmask])
+
+    ax1.set_xlim([xaxlammin, xaxlammax])
+    #ymin = np.nanmin(Fpe2[amask,:][:,lmask2]/Fse2[amask,:][:,lmask2])
+    #ymax = np.nanmax(Fpe2[amask,:][:,lmask2]/Fse2[amask,:][:,lmask2])
+    ax0.set_ylim([ymin, ymax])
+    #ax1.set_ylim([ymin, ymax])
+
+    for ix in range(len(miri_names)):
+        ax1.errorbar(lamlo[ix], yarr_maxlo[ix], xerr=0.5*dlamlo[ix], fmt="o", ms=5.0, color=colors1[ix],
+                    label=miri_names[ix], lw=3.0)
+        #ax1.text(lamlo[ix], yarr_maxlo[ix]*1.2, miri_names[ix],
+        #        verticalalignment='bottom', horizontalalignment='center')
+
+    leg=ax1.legend(loc=7, fontsize=16, ncol=2)
+    leg.get_frame().set_alpha(0.0)
 
     # Save plot
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')

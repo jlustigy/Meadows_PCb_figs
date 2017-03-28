@@ -14,12 +14,14 @@ def make_fig():
     from utils import fig_params, atm
 
     # Params specific to this plot
-    savetag = "fig04"
-    fname1 = "profile_o2lb_10bar_h2o.pt_filtered.atm"
-    fname2 = "profile_o2lb_10bar_dry.pt_filtered.atm"
+    savetag = "fig04_new"
+    #fname1 = "profile_o2lb_10bar_h2o.pt_filtered.atm"
+    #fname2 = "profile_o2lb_10bar_dry.pt_filtered.atm"
+    fname1 = "10bar_O2_wet.pt_filtered_R1.atm"
+    fname2 = "10bar_O2_dry.pt_filtered_R1.atm"
     title1 = "10 bar O$_2$, Ocean"
     title2 = "10 bar O$_2$, Dessicated"
-    seed = 7
+    seed = 35#30#27#18
     xlim = [1e-9, 1.1]
     ylim = [1e6, 1e-3]
     tlim = [155, 325]
@@ -34,10 +36,12 @@ def make_fig():
     P1, T1 = data1[:,0], data1[:,1]
     gas_profiles1 = data1[:,2:]
     molec_names1 = ["CO$_2$", "O$_2$", "O$_3$", "CO", "HNO$_3$", "NO$_2$", "SO$_2$", "N$_2$"]
+    molec_names1 = ["H$_2$O", "CO$_2$", "O$_2$", "O$_3$", "CO", "HNO$_3$", "NO$_2$", "SO$_2$", "N$_2$"]
 
     P2, T2 = data2[:,0], data2[:,1]
     gas_profiles2 = data2[:,2:]
     molec_names2 = ["CO$_2$", "O$_2$", "O$_3$", "CO", "HNO$_3$", "NO$_2$", "SO$_2$", "N$_2$"]
+    molec_names2 = ["CO$_2$", "O$_2$", "O$_3$", "CO", "SO$_2$", "N$_2$"]
 
     P = (P1, P2)
     T = (T1, T2)

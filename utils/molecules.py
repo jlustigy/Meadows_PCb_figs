@@ -37,6 +37,8 @@ def color_from_molecule(molecule):
         return "mediumturquoise"
     elif molecule == "C$_2$H$_6$":
         return "mediumvioletred"
+    elif molecule == "H$_2$CO":
+        return "firebrick"
     else:
         print "No color specified for %s" %molecule
         return "black"

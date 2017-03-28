@@ -8,4 +8,6 @@ import atms as atm
 
 import molecules
 
+import eyecolors
+
 #import plot_atm as atm

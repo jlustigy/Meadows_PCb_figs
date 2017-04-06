@@ -1,5 +1,5 @@
 """
-Figure 14: Clear-sky Venus-like Phase Curves
+Figure 12: Hazy Archean Phase Curves
 
 Author: Jacob Lustig-Yaeger
 """
@@ -15,29 +15,30 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig14_idl"
+    savetag = "fig12_nohaze"
     lammin = 6.5
     lammax = 18.
     R = 4
-    iout = 0
-    legloc = (0.4, 0.72)
 
     # More general params
     planetdir = os.path.join(os.path.dirname(__file__),"model_outputs/")
     alpha = np.array([-180, -150., -120., -90., -60., -30., 0., 30., 60., 90., 120., 150., 180.])
 
     # Read-in all disk integrated spectra
-    #typedir = "phaseout_thermal_noTcontrast/"; iout = 1
-    typedir = "Tcontrast_min/"
+    #typedir = "phaseout_thermal_noTcontrast/"; iout = 2
+    typedir = "Tcontrast_min_nohaze/"; iout = 1#2
     output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
     #typedir = "phaseout_nothermal/"
-    typedir = "Tcontrast_max_idl/"
+    typedir = "Tcontrast_max_nohaze/"
     output2, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
     #typedir = "phaseout_thermal_20/"
-    typedir = "Tcontrast_20K_idl/"
-    output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
+    typedir = "Tcontrast_20K_nohaze/"
+    output3, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
     # Make plot
     """
@@ -47,7 +48,7 @@ def make_fig():
     """
 
     pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
-                                R=R, lammin=lammin, lammax=lammax, legloc=legloc,
+                                R=R, lammin=lammin, lammax=lammax,
                                 iout=iout, savetag=savetag+"_miri")
 
     return

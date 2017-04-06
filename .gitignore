@@ -3,6 +3,7 @@
 *.rad
 *.atm
 *.tran
+*.trnst
 *.pt
 *.DS_Store
 *.pyc
@@ -10,6 +11,7 @@
 figures/*.pdf
 figures/*.png
 figures/*.eps
+figures/extras/*
 resources/*
 *.dropbox
 *Icon*

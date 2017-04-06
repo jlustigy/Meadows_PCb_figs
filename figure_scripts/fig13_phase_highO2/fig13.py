@@ -15,7 +15,7 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig13"
+    savetag = "fig13_idl"
     lammin = 6.5
     lammax = 26.3
     R = 3
@@ -26,14 +26,33 @@ def make_fig():
     alpha = np.array([-180, -150., -120., -90., -60., -30., 0., 30., 60., 90., 120., 150., 180.])
 
     # Read-in all disk integrated spectra
-    typedir = "phaseout_thermal_noTcontrast/"
+    key = "10bar_wet"
+    typedir = key+"/Tcontrast_min/"; iout = 0
     output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
-    typedir = "phaseout_nothermal/"
+    #typedir = "phaseout_nothermal/"
+    #typedir = "Tcontrast_max_haze/"
+    typedir = key+"/Tcontrast_max_idl/"
+    #typedir = "Tcontrast_max_haze_test/"
     output2, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
-    typedir = "phaseout_thermal_20/"
-    output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
+    #typedir = "phaseout_thermal_20/"
+    #typedir = "Tcontrast_20K_haze/"
+    typedir = key+"/Tcontrast_20K_idl/"
+    #typedir = "Tcontrast_20K_haze_test/"
+    output3, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
+
+    #typedir = "phaseout_thermal_noTcontrast/"
+    #output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+
+    #typedir = "phaseout_nothermal/"
+    #output2, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+
+    #typedir = "phaseout_thermal_20/"
+    #output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
 
     # Make plot
     """
@@ -41,10 +60,10 @@ def make_fig():
                                 R=R, lammin=lammin, lammax=lammax,
                                 iout=iout, savetag=savetag)
     """
-    
+
     pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
                                 R=R, lammin=lammin, lammax=lammax,
-                                iout=iout, savetag=savetag+"_miri")
+                                iout=iout, savetag=savetag+"_miri_"+key+"")
 
     return
 #########################################

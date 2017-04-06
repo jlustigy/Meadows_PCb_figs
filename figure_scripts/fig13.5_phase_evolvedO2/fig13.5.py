@@ -1,5 +1,5 @@
 """
-Figure 14: Clear-sky Venus-like Phase Curves
+Figure 13.5: Evolved O2+CO2 Phase Curves (not in V1 submmitted draft)
 
 Author: Jacob Lustig-Yaeger
 """
@@ -15,29 +15,44 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig14_idl"
+    savetag = "fig13.5_idl"
     lammin = 6.5
-    lammax = 18.
-    R = 4
-    iout = 0
-    legloc = (0.4, 0.72)
+    lammax = 26.3
+    R = 3
+    iout = 1
 
     # More general params
     planetdir = os.path.join(os.path.dirname(__file__),"model_outputs/")
     alpha = np.array([-180, -150., -120., -90., -60., -30., 0., 30., 60., 90., 120., 150., 180.])
 
     # Read-in all disk integrated spectra
-    #typedir = "phaseout_thermal_noTcontrast/"; iout = 1
-    typedir = "Tcontrast_min/"
+    key = "10bar"
+    typedir = key+"/Tcontrast_min/"; iout = 0
     output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
     #typedir = "phaseout_nothermal/"
-    typedir = "Tcontrast_max_idl/"
+    #typedir = "Tcontrast_max_haze/"
+    typedir = key+"/Tcontrast_max_idl/"
+    #typedir = "Tcontrast_max_haze_test/"
     output2, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
     #typedir = "phaseout_thermal_20/"
-    typedir = "Tcontrast_20K_idl/"
-    output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
+    #typedir = "Tcontrast_20K_haze/"
+    typedir = key+"/Tcontrast_20K_idl/"
+    #typedir = "Tcontrast_20K_haze_test/"
+    output3, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
+
+    #typedir = "phaseout_thermal_noTcontrast/"
+    #output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+
+    #typedir = "phaseout_nothermal/"
+    #output2, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+
+    #typedir = "phaseout_thermal_20/"
+    #output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
 
     # Make plot
     """
@@ -47,8 +62,8 @@ def make_fig():
     """
 
     pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
-                                R=R, lammin=lammin, lammax=lammax, legloc=legloc,
-                                iout=iout, savetag=savetag+"_miri")
+                                R=R, lammin=lammin, lammax=lammax,
+                                iout=iout, savetag=savetag+"_miri_"+key)
 
     return
 #########################################

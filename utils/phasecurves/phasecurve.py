@@ -890,13 +890,13 @@ def custom_phase_phots(lam_in, sol_in, rad_in, alb_in, alpha, lam, dlam,
         iNs_hr = integrate.trapz(Ns[mask][::-1], x=lam[mask][::-1])
 
 
-        # Degrade spectrum
-        Fp[j,:] = cg.degrade_spec(Fp_earth, lam, lamlo, dlam=dlamlo)
-        Fs[j,:] = cg.degrade_spec(Fs_earth, lam, lamlo, dlam=dlamlo)
-        Fpp[j,:] = cg.degrade_spec(Fp_phot, lam, lamlo, dlam=dlamlo)
-        Fsp[j,:] = cg.degrade_spec(Fs_phot, lam, lamlo, dlam=dlamlo)
-        Nparr[j,:] = cg.degrade_spec(Np, lam, lamlo, dlam=dlamlo)
-        Nsarr[j,:] = cg.degrade_spec(Ns, lam, lamlo, dlam=dlamlo)
+        # Degrade spectrum downbin_spec
+        Fp[j,:] = cg.downbin_spec(Fp_earth, lam, lamlo, dlam=dlamlo)
+        Fs[j,:] = cg.downbin_spec(Fs_earth, lam, lamlo, dlam=dlamlo)
+        Fpp[j,:] = cg.downbin_spec(Fp_phot, lam, lamlo, dlam=dlamlo)
+        Fsp[j,:] = cg.downbin_spec(Fs_phot, lam, lamlo, dlam=dlamlo)
+        Nparr[j,:] = cg.downbin_spec(Np, lam, lamlo, dlam=dlamlo)
+        Nsarr[j,:] = cg.downbin_spec(Ns, lam, lamlo, dlam=dlamlo)
 
         # Integrate photons at low resolution
         iNp_lr = integrate.trapz(Nparr[j,:], x=lamlo)
@@ -1050,7 +1050,7 @@ def plot_binned_phasecurves_new(alpha, output1, output2, output3, iout=0, saveta
 
 def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savetag="fig",
                             amin=0.0, amax=180.0, iout20=0, plotdir="../../figures/",
-                            R=3, lammin=6.5, lammax=26.3):
+                            R=3, lammin=6.5, lammax=26.3, legloc=7):
     """
     Creates binned phasecurve plots (used in Meadows et al. paper)
 
@@ -1089,9 +1089,11 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
     miri_names = np.array(["F1000W", "F1130W", "F1280W", "F1500W", "F1800W", "F2100W", "F2550W"])
     Tput = 0.27
 
+    """
     lamlo1, dlamlo1, Nsarr1, Nparr1, Fsp1, Fpp1, Fs1, Fp1, hires1, cplan1, cstar1 = \
     custom_phase_phots(output1[iout][0],output1[iout][1],output1[iout][2],output1[iout][3], \
                 alpha, miri_phot_wl, miri_phot_dwl, Tput=Tput)
+    """
 
     lamlo2, dlamlo2, Nsarr2, Nparr2, Fsp2, Fpp2, Fs2, Fp2, hires2, cplan2, cstar2 = \
     custom_phase_phots(output2[iout][0],output2[iout][1],output2[iout][2],output2[iout][3], \
@@ -1102,12 +1104,14 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
     custom_phase_phots(output3[iout20][0],output3[iout20][1],output3[iout20][2],output3[iout20][3], \
                 alpha, miri_phot_wl, miri_phot_dwl, Tput=Tput)
 
-    lamlo = lamlo1
-    dlamlo = dlamlo1
+    lamlo = lamlo2
+    dlamlo = dlamlo2
 
+    """
     lamhi1 = hires1[0]
     Fpe1 = hires1[1]
     Fse1 = hires1[2]
+    """
 
     lamhi2 = hires2[0]
     Fpe2 = hires2[1]
@@ -1142,6 +1146,7 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
     # Set axis labels
     ax0.set_ylabel(r"Planet/Star Contrast")
     ax0.set_xlabel(r"Phase [deg]")
+    ax0.set_xticks([-180., -90., 0., 90., 180.])
     ax0.semilogy()
     #ax0.yaxis.tick_right()
     #ax0.yaxis.set_label_position("right")
@@ -1191,7 +1196,7 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
         #ax1.text(lamlo[ix], yarr_maxlo[ix]*1.2, miri_names[ix],
         #        verticalalignment='bottom', horizontalalignment='center')
 
-    leg=ax1.legend(loc=7, fontsize=16, ncol=2)
+    leg=ax1.legend(loc=legloc, fontsize=16, ncol=2)
     leg.get_frame().set_alpha(0.0)
 
     # Save plot

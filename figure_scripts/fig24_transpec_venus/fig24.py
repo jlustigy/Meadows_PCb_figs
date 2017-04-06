@@ -8,11 +8,13 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig24_new"
+    savetag = "fig24_newest"
     #fname1 = "fig24_tran_smart_spectra_pandora10bar_cloudy_500_100000cm-1.tran"
     #fname2 = "fig24_tran_smart_spectra_pandora90bar_clouds_500_100000cm-1.tran"
-    fname1 = "PCb_Venus_10bar_TRAN.tran"
-    fname2 = "PCb_Venus_90bar_TRAN.tran"
+    #fname1 = "PCb_Venus_10bar_TRAN.tran"
+    #fname2 = "PCb_Venus_90bar_TRAN.tran"
+    fname1 = "PCb_Venus_10bar.trnst"
+    fname2 = "PCb_Venus_90bar.trnst"
     title  = "Venus-like (Clouds)"
     title1 = "10 bar"
     title2 = "90 bar"

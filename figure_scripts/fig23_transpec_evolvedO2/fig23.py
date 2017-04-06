@@ -8,9 +8,11 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig23"
-    fname1 = "profile_O2_CO2_10bar_prox_transit_hitran2012_50_100000cm.tran"
-    fname2 = "profile_O2_CO2_90bar_prox_transit_hitran2012_50_100000cm.tran"
+    savetag = "fig23_new"
+    #fname1 = "old/profile_O2_CO2_10bar_prox_transit_hitran2012_50_100000cm.tran"
+    #fname2 = "old/profile_O2_CO2_90bar_prox_transit_hitran2012_50_100000cm.tran"
+    fname1 = "10bar_O2_CO2.trnst"
+    fname2 = "90bar_O2_CO2.trnst"
     title1 = "10 bar O$_2$-CO$_2$"
     title2 = "90 bar O$_2$-CO$_2$"
     lammin = 0.2

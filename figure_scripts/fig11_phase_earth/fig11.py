@@ -15,7 +15,7 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig11"
+    savetag = "fig11_oldtest_fix5"
     lammin = 6.5
     lammax = 26.3
     R = 3
@@ -23,17 +23,37 @@ def make_fig():
 
     # More general params
     planetdir = os.path.join(os.path.dirname(__file__),"model_outputs/")
+    #alpha = np.array([-180, -150., -120., -90., -60., -30., 0., 30., 60., 90., 120., 150., 180.])
     alpha = np.array([-180, -150., -120., -90., -60., -30., 0., 30., 60., 90., 120., 150., 180.])
 
     # Read-in all disk integrated spectra
-    typedir = "phaseout_thermal_noTcontrast/"
+    typedir = "pre_Tcontrast_min/"; iout = 0
     output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
-    typedir = "phaseout_nothermal/"
+    #typedir = "phaseout_nothermal/"
+    #typedir = "Tcontrast_max_haze/"
+    typedir = "pre_Tcontrast_max/"
+    #typedir = "Tcontrast_max_haze_test/"
     output2, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
 
-    typedir = "phaseout_thermal_20/"
-    output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
+    #typedir = "phaseout_thermal_20/"
+    #typedir = "Tcontrast_20K_haze/"
+    typedir = "pre_Tcontrast_20K_fix5/"
+    #typedir = "Tcontrast_20K_haze_test/"
+    output3, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    print flist[iout]
+
+    # Read-in all disk integrated spectra
+    #typedir = "phaseout_thermal_noTcontrast/"
+    #output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+
+    #typedir = "phaseout_nothermal/"
+    #output2, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+
+    #typedir = "phaseout_thermal_20/"
+    #output3, tmp = pcs.open_phase_dir(alpha, planetdir, typedir)
 
     # Make plot
     """

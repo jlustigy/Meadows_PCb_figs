@@ -25,7 +25,7 @@ def make_fig():
     wantsnr = 20.0  # Desired signal-to-noise ratio
 
     # More general params
-    planetdir = os.path.join(os.path.dirname(__file__),"model_outputs/")
+    planetdir = os.path.join(os.path.dirname(__file__),"model_outputs/new/")
     alpha = np.array([-180, -150., -120., -90., -60., -30., 0., 30., 60., 90., 120., 150., 180.])
 
     # Read-in all disk integrated spectra
@@ -39,7 +39,7 @@ def make_fig():
 
     # Plot disk-integrated spectral at 90 deg
     lamhr, sol, rad = pcg.parse_from_phase(output1, alpha, phase=90)
-    pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_disk", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_disk_new", itime=itime, wantsnr=wantsnr, ytype=ytype)
 
     # Using rad file...
     path = os.path.join(os.path.dirname(__file__), frad)

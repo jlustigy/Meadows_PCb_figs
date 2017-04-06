@@ -8,9 +8,11 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig22"
-    fname1 = "profile_o2lb_10bar_h2o.pt_filtered_transit.tran"
-    fname2 = "profile_o2lb_10bar_dry.pt_filtered_transit.tran"
+    savetag = "fig22_new"
+    #fname1 = "profile_o2lb_10bar_h2o.pt_filtered_transit.tran"
+    #fname2 = "profile_o2lb_10bar_dry.pt_filtered_transit.tran"
+    fname1 = "10bar_O2_wet.trnst"
+    fname2 = "10bar_O2_dry.trnst"
     title1 = "10 bar O$_2$ (Ocean)"
     title2 = "10 bar O$_2$ (Dessicated)"
     lammin = 0.2

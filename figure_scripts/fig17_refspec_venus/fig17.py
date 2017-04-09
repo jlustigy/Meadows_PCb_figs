@@ -22,6 +22,16 @@ def make_fig():
     labels1 = ["O2", "O3", "O4", "CO", "CO2", "H2O"]
     labels2 = ["O2", "O3", "O4", "CO", "CO2"]
 
+    m1 = {"H$_2$O" : [(1.4, 0.44), (1.87, 0.4), (2.4, 0.32)],
+          "CO$_2$" : [(0.75, 0.47), (0.88, 0.47), (1.05, 0.47), (1.21, .47), (1.6, 0.4), (2.01, 0.3)],
+          "Unknown UV\n absorber" : [(0.45, 0.5)]
+          }
+    m2 = {"H$_2$O" : [(1.4, 0.44), (1.87, 0.4), (2.4, 0.32)],
+          "CO$_2$" : [(0.75, 0.48), (0.88, 0.47), (1.05, 0.46), (1.21, .46), (1.6, 0.4), (2.01, 0.3)],
+          "Unknown UV\n absorber" : [(0.45, 0.5)]
+          }
+    moleloc = [m1, m2]
+
     # import basic dependencies
     import numpy as np
     import os
@@ -39,7 +49,7 @@ def make_fig():
 
     # Make reflectance plot
     spc.plot_rad(fname, savetag=savetag, lammin=lammin, lammax=lammax, ylim=ylim,
-                 title=title, labels=None, Nstr=Nstr)
+                 title=title, labels=None, Nstr=Nstr, moleloc=moleloc)
 
     return
 #########################################

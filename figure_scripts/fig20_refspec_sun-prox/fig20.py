@@ -18,7 +18,7 @@ def make_fig():
     import utils.spectra as spc
 
     # Params specific to this plot
-    savetag = "fig20"
+    savetag = "fig20_new"
     title1 = "Sun/Proxima Comparison"
     plot_kwargs = [
         {"color" : "orange", "label" : "Earth-Sun", "alpha" : 0.7},
@@ -29,15 +29,15 @@ def make_fig():
     lammax = 2.5
     ylim = [-0.02, 0.3]
     fname_new1 = "model_outputs/modern_earth_preindustrial_hitran2012_300_100000cm_combined_toa.rad"
-    fname_new2 = "model_outputs/profile_earth_prox.pt_filtered_hitran2012_50_100000cm_combined_toa.rad"
+    fname_new2 = "model_outputs/profile_Earth_proxb_combined_toa.rad"
     fname_new = [fname_new1, fname_new2]
 
     fname1 = "modern_earth_preindustrial_hitran2012_300_100000cm_toa.rad"
     fname2 = "modern_earth_preindustrial_hitran2012_300_100000cm_stratocum_toa.rad"
     fname3 = "modern_earth_preindustrial_hitran2012_300_100000cm_cirrus_toa.rad"
-    fname4 = "profile_earth_prox.pt_filtered_hitran2012_50_100000cm_toa.rad"
-    fname5 = "profile_earth_prox.pt_stratocum_hitran2012_50_100000cm_toa.rad"
-    fname6 = "profile_earth_prox.pt_cirrus_hitran2012_50_100000cm_toa.rad"
+    fname4 = "profile_Earth_proxb_clear_toa.rad"
+    fname5 = "profile_Earth_proxb_stratocum_toa.rad"
+    fname6 = "profile_Earth_proxb_cirrus_toa.rad"
     fname = [
         os.path.join(os.path.dirname(__file__),"model_outputs/", f)
         for f in [fname1, fname2, fname3, fname4, fname5, fname6]

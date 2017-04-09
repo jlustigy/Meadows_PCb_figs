@@ -8,11 +8,11 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig19"
-    fname1 = "profile_earth_prox.pt_filtered_hitran2012_50_100000cm_toa.rad"
-    fname2 = "profile_earth_prox.pt_stratocum_hitran2012_50_100000cm_toa.rad"
-    fname3 = "profile_earth_prox.pt_cirrus_hitran2012_50_100000cm_toa.rad"
-    fname_new = "model_outputs/profile_earth_prox.pt_combined_hitran2012_50_100000cm_toa.rad"
+    savetag = "fig19_new"
+    fname1 = "profile_Earth_proxb_clear_toa.rad"
+    fname2 = "profile_Earth_proxb_stratocum_toa.rad"
+    fname3 = "profile_Earth_proxb_cirrus_toa.rad"
+    fname_new = "model_outputs/profile_Earth_proxb_combined_toa.rad"
     title1 = "Earth-like ($50\%$ clouds)"
     lammin = 0.1
     lammax = 2.5

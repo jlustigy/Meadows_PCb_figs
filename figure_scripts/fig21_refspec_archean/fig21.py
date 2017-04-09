@@ -18,7 +18,7 @@ def make_fig():
     import utils.spectra as spc
 
     # Params specific to this plot
-    savetag = "fig21"
+    savetag = "fig21_new"
     title1 = "Archean Earth-like ($50\%$ clouds)"
     plot_kwargs = [
         {"color" : "purple", "label" : "No Haze, $5\%$ CO$_2$, $1\%$ CH$_4$", "alpha" : 0.7},
@@ -28,16 +28,16 @@ def make_fig():
     lammin = 0.25
     lammax = 2.5
     ylim = [-0.02, 0.3]
-    fname_new1 = "model_outputs/fig21_NOHAZE_msun21_0.0Ga_1.00e-02ch4_rmix_5.0E-2COMBINED_toa.rad"
-    fname_new2 = "model_outputs/fig21_HAZE_msun21_0.0Ga_1.50e-02ch4_rmix_5.0E-2COMBINED_toa.rad"
+    fname_new1 = "model_outputs/HAZE_1.00e-02ch4_combined_new_toa.rad"
+    fname_new2 = "model_outputs/HAZE_1.50e-02ch4_combined_new_toa.rad"
     fname_new = [fname_new1, fname_new2]
 
-    fname1 = "fig21_NOHAZE_msun21_0.0Ga_1.00e-02ch4_rmix_5.0E-2_toa.rad"
-    fname2 = "fig21_NOHAZE_msun21_0.0Ga_1.00e-02ch4_rmix_5.0E-2CIRRUS_toa.rad"
-    fname3 = "fig21_NOHAZE_msun21_0.0Ga_1.00e-02ch4_rmix_5.0E-2STCUM_toa.rad"
-    fname4 = "fig21_HAZE_msun21_0.0Ga_1.50e-02ch4_rmix_5.0E-2_toa.rad"
-    fname5 = "fig21_HAZE_msun21_0.0Ga_1.50e-02ch4_rmix_5.0E-2CIRRUS_toa.rad"
-    fname6 = "fig21_HAZE_msun21_0.0Ga_1.50e-02ch4_rmix_5.0E-2STCUM_toa.rad"
+    fname1 = "HAZE_1.00e-02ch4_clear_new_toa.rad"
+    fname2 = "HAZE_1.00e-02ch4_cirrus_new_toa.rad"
+    fname3 = "HAZE_1.00e-02ch4_stcum_new_toa.rad"
+    fname4 = "HAZE_1.50e-02ch4_clear_new_toa.rad"
+    fname5 = "HAZE_1.50e-02ch4_cirrus_new_toa.rad"
+    fname6 = "HAZE_1.50e-02ch4_stcum_new_toa.rad"
     fname = [
         os.path.join(os.path.dirname(__file__),"model_outputs/", f)
         for f in [fname1, fname2, fname3, fname4, fname5, fname6]

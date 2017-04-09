@@ -14,11 +14,12 @@ def make_fig():
     from utils import fig_params, atm
 
     # Params specific to this plot
-    savetag = "fig08_new"
+    savetag = "fig08_new2"
     #fname1 = "profile_modern_earth_preindustrial.pt_filtered.atm"
     #fname2 = "profile_earth_prox.pt_filtered.atm"
     fname1 = "profile_Earth_modern_preindustrial_R1.pt_filtered.atm"
-    fname2 = "profile_Earth_proxb_.pt_filtered_R1.atm"
+    #fname2 = "profile_Earth_proxb_.pt_filtered_R1.atm"
+    fname2 = "profile_Earth_proxb_.pt_filtered.atm"
     title1 = "Pre-Industrial Earth"
     title2 = "Earth-like Proxima Cen b"
     seed = 25#16#11#7

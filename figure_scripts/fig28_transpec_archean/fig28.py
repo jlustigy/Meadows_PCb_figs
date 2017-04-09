@@ -8,9 +8,9 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig28"
-    fname1 = "fig28_HAZE_msun21_0.0Ga_1.50e-02ch4_rmix_5.0E-2TRAN.tran"
-    fname2 = "fig28_HAZE_msun21_0.0Ga_1.00e-02ch4_rmix_5.0E-2__30.66fscaleTRAN.tran"
+    savetag = "fig28_new"
+    fname1 = "HAZE_1.50e-02ch4_clear_new.trnst"
+    fname2 = "HAZE_1.00e-02ch4_clear_new.trnst"
     title  = "Archean Earth-like"
     title1 = "$5\%$ CO$_2$, $1.5\%$ CH$_4$ (Haze)"
     title2 = "$5\%$ CO$_2$, $1\%$ CH$_4$ (No Haze)"

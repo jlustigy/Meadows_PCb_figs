@@ -8,7 +8,7 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig36"
+    savetag = "fig36_new"
     fname = "fig35_modern_earth_standard_clearsky_2000_100000cm_60sza_sur.rad"
     title  = ""
 
@@ -23,13 +23,13 @@ def make_fig():
         },
         {
             "name" : "Earth-like",
-            "file" : modir+"profile_earth_prox.pt_filtered_hitran2012_50_100000cm_toa.rad",
+            "file" : modir+"profile_Earth_proxb_clear_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)
         },
         {
             "name" : "Hazy Archean Earth-like",
-            "file" : modir+"fig21_HAZE_msun21_0.0Ga_1.50e-02ch4_rmix_5.0E-2COMBINED_toa.rad",
+            "file" : modir+"HAZE_1.50e-02ch4_clear_new_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)
         },

@@ -129,7 +129,7 @@ def weight_spectra(dic, ret=True, output=None):
 def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
                     plot_kwargs={"color" : "black"}, title=None, plotdir="../../figures/",
                     legloc=None, ylim=None, labels=None, forced_single=False,
-                    legend=False, Nstr=8):
+                    legend=False, Nstr=8, moleloc=None):
     """
 
     Parameters
@@ -188,6 +188,25 @@ def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
         # Actually plot it!
         ax.plot(lam[mask], refl[mask], **plot_kwargs[i])
 
+        if moleloc is not None:
+            if type(moleloc) is list:
+                mloc = moleloc[i]
+            elif type(moleloc) is dict:
+                mloc = moleloc
+            else:
+                print "Incompatible type for moleloc kwarg"
+            for key, value in mloc.iteritems():
+                #print key, value
+                # get molecule color
+                mcol = molecules.color_from_molecule(key)
+                for im in range(len(value)):
+                    # place label
+                    ax.text(value[im][0], value[im][1], key, va='center', ha='center',
+                         color=mcol, fontsize=16, zorder=10,
+                         bbox=dict(boxstyle="square", fc="none", ec="none"))
+
+
+        # Attempt to label molecules automatically
         if label is not None:
             # Get x and y data
             xdat = ax.lines[0].get_xdata()

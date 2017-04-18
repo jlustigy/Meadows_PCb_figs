@@ -119,6 +119,7 @@ def make_fig():
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
 
     return
 #########################################

@@ -8,7 +8,7 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig36_new"
+    savetag = "fig36"
     fname = "fig35_modern_earth_standard_clearsky_2000_100000cm_60sza_sur.rad"
     title  = ""
 
@@ -16,42 +16,69 @@ def make_fig():
 
     files = [
         {
-            "name" : "Proxima Centauri",
+            "name" : "Proxima Centauri (star)",
             "file" : modir+"proxima_cen_sed.txt",
             "header" : 25,
             "iwlflx" : (0,1)
         },
         {
-            "name" : "Earth-like",
-            "file" : modir+"profile_Earth_proxb_clear_toa.rad",
+            "name" : "Earth-like (clearsky)",
+            "file" : modir+"profile_Earth_proxb_.pt_hitran2012_o4_noh2co_187Kstrat_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)
         },
         {
-            "name" : "Hazy Archean Earth-like",
+            "name" : "Hazy Archean Earth-like (clearsky)",
             "file" : modir+"HAZE_1.50e-02ch4_clear_new_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)
         },
         {
-            "name" : "O$_2$-dominated (Ocean)",
-            "file" : modir+"profile_o2lb_10bar_h2o.pt_filtered_hitran2012_50_100000cm_toa.rad",
+            "name" : "O$_2$-dominated (ocean)",
+            "file" : modir+"10bar_O2_wet.pt_filtered_hitran2012_50_100000cm_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)
         },
         {
-            "name" : "O$_2$-dominated (Dessicated)",
-            "file" : modir+"profile_o2lb_10bar_dry.pt_filtered_hitran2012_50_100000cm_toa.rad",
+            "name" : "O$_2$-dominated (dessicated)",
+            "file" : modir+"10bar_O2_dry.pt_filtered_hitran2012_50_100000cm_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)
         },
         {
-            "name" : "Venus-like",
+            "name" : "Venus-like (cloudy)",
             "file" : modir+"PCb_Venus_90bar_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)
         }
     ]
+
+    """
+    {
+        "name" : "O$_2$-dominated (Ocean)",
+        "file" : modir+"10bar_O2_wet.pt_filtered_hitran2012_50_100000cm_toa.rad",
+        "header" : 0,
+        "iwlflx" : (0,3)
+    },
+    {
+        "name" : "O$_2$-dominated (Dessicated)",
+        "file" : modir+"10bar_O2_dry.pt_filtered_hitran2012_50_100000cm_toa.rad",
+        "header" : 0,
+        "iwlflx" : (0,3)
+    },
+    {
+        "name" : "1 bar CO$_2$/CO/O$_2$ (Dessicated)",
+        "file" : modir+"smart_gao_1bar_update_xsec_toa.rad",
+        "header" : 0,
+        "iwlflx" : (0,3)
+    },
+    {
+        "name" : "10 bar O$_2$-CO$_2$",
+        "file" : modir+"10bar_O2_CO2_final.pt_filtered_hitran2012_50_100000cm_toa.rad",
+        "header" : 0,
+        "iwlflx" : (0,3)
+    },
+    """
 
     lammin = 0.0
     lammax = 10.0

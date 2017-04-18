@@ -213,7 +213,7 @@ def plot_spectrum(wl, spectrum,
         return fig
 
 def plot_multipanel_ispec(files, plotdir="../../figures/", savetag="multi_ispec_test",
-                          lammin=0.380, lammax=.720):
+                          lammin=0.380, lammax=.720, eps=True):
     """
     """
 
@@ -257,3 +257,7 @@ def plot_multipanel_ispec(files, plotdir="../../figures/", savetag="multi_ispec_
 
     # Save
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+
+    if eps:
+        # Save
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')

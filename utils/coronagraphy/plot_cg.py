@@ -234,7 +234,7 @@ def add_coronagraph_axes(lamhr, sol, rad, phase=90., diam=30., lammin=0.35, lamm
     ax2.text(0.75, 0.97, plot_text,\
          verticalalignment='top', horizontalalignment='center',\
          transform=ax2.transAxes,\
-         color='black', fontsize=15, bbox=dict(boxstyle="square", fc="w", ec="k"))
+         color='black', fontsize=15, bbox=dict(boxstyle="square", fc="w", ec="k", alpha=1.0))
 
     # Set x-label
     ax2.set_xlabel("Wavelength [$\mu$m]")
@@ -287,7 +287,7 @@ def add_coronagraph_axes(lamhr, sol, rad, phase=90., diam=30., lammin=0.35, lamm
     return ax1, ax2
 
 def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag="fig",
-                         plotdir="../../figures/", ytype="FpFs"):
+                         plotdir="../../figures/", ytype="FpFs", eps=True):
 
     lammin = 0.3
     lammax = 1.5
@@ -354,11 +354,14 @@ def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag=
     # Save plot
     fig.tight_layout()
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
-    #fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
     print "Saved:", savetag
 
+    if eps:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+        print "Saved:", savetag
+
 def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag="fig",
-                         plotdir="../../figures/", ytype="FpFs"):
+                         plotdir="../../figures/", ytype="FpFs", eps=True):
 
     lammin = 0.3
     lammax = 1.5
@@ -378,6 +381,8 @@ def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, save
     ax4 = plt.subplot(gs[6])
     ax5 = plt.subplot(gs[7])
     snr_axes = [ax0, ax2, ax4]
+    spc_axes = [ax1, ax3, ax5]
+
     plt.subplots_adjust(wspace=0.07, hspace=0.0)
 
 
@@ -428,8 +433,12 @@ def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, save
     #fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
     print "Saved:", savetag
 
+    if eps:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+        print "Saved:", savetag
+
 def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag="fig",
-                         plotdir="../../figures/", ytype="FpFs"):
+                         plotdir="../../figures/", ytype="FpFs", eps=True):
 
     lammin = 0.3
     lammax = 1.5
@@ -449,6 +458,8 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
     ax4 = plt.subplot(gs[5])
     ax5 = plt.subplot(gs[4])
     snr_axes = [ax0, ax2, ax4]
+    spc_axes = [ax1, ax3, ax5]
+
     plt.subplots_adjust(wspace=0.15, hspace=0.15)
 
     ax0.set_xlabel(r"Wavelength [$\mu$m]")
@@ -467,6 +478,9 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
                                ground=False, wantsnr=wantsnr, itime=itime,
                                ytype=ytype)
     #ax2.set_title("LUVOIR 16m")
+    ax2t = ax2.twinx()
+    ax2t.set_yticks([])
+    ax2t.set_ylabel("LUVOIR 16m", rotation=270, labelpad=28, fontsize=30)
 
     # Plot HabEx
     ax0, ax1 = add_coronagraph_axes(lam, sol, rad,
@@ -476,6 +490,9 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
                                 ground=False, wantsnr=wantsnr, itime=itime,
                                 ytype=ytype)
     #ax0.set_title("HabEx 6.5m")
+    ax0t = ax0.twinx()
+    ax0t.set_yticks([])
+    ax0t.set_ylabel("HabEx 6.5m", rotation=270, labelpad=28, fontsize=30)
 
     # Plot 30m Ground w/IWA lines
     ax4, ax5 = add_coronagraph_axes(lam, sol, rad,
@@ -487,12 +504,15 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
                                        ytype=ytype
                                        )
     #ax4.set_title("Ground-Based 30m")
+    ax4t = ax4.twinx()
+    ax4t.set_yticks([])
+    ax4t.set_ylabel("Ground-Based 30m", rotation=270, labelpad=28, fontsize=30)
 
     # Plot 30m Ground
     #fig = plot_coronagraph_ground(lam, sol, rad, Tput=0.05, title="Ground-Based 30m", wantsnr=20, lammin=0.3, lammax=1.5,
     #                              iwa_lines=False)
 
-    # Put all top plots on same yaxis
+    # Put all snr plots on same yaxis
     ymax_max = 0.0
     for ax_tmp in snr_axes:
         ymin, ymax = ax_tmp.get_ylim()
@@ -501,7 +521,21 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
     for ax_tmp in snr_axes:
             ax_tmp.set_ylim([1.0, ymax])
 
+    # Put all spectrum plots on same yaxis
+    ymax_max = 0.0
+    for i in range(len(spc_axes)-1):
+        ax_tmp = spc_axes[i]
+        ymin, ymax = ax_tmp.get_ylim()
+        if ymax > ymax_max:
+            ymax_max = ymax
+    for ax_tmp in spc_axes:
+            ax_tmp.set_ylim([-5.0, ymax])
+
     # Save plot
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
     #fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".png"), bbox_inches='tight')
     print "Saved:", savetag
+
+    if eps:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+        print "Saved:", savetag

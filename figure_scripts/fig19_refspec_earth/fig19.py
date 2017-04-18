@@ -8,10 +8,10 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig19_new"
-    fname1 = "profile_Earth_proxb_clear_toa.rad"
-    fname2 = "profile_Earth_proxb_stratocum_toa.rad"
-    fname3 = "profile_Earth_proxb_cirrus_toa.rad"
+    savetag = "fig19"
+    fname1 = "profile_Earth_proxb_.pt_hitran2012_o4_noh2co_187Kstrat_toa.rad"
+    fname2 = "profile_Earth_proxb_.pt_stratocum_hitran2012_o4_noh2co_187Kstrat_toa.rad"
+    fname3 = "profile_Earth_proxb_.pt_cirrus_hitran2012_o4_noh2co_187Kstrat_toa.rad"
     fname_new = "model_outputs/profile_Earth_proxb_combined_toa.rad"
     title1 = "Earth-like ($50\%$ clouds)"
     lammin = 0.1
@@ -20,10 +20,12 @@ def make_fig():
     labels1 = ["O2", "O3", "O4", "CO", "CO2", "H2O"]
     labels2 = ["O2", "O3", "O4", "CO", "CO2"]
 
-    moleloc = {"O$_2$" : [(0.15, 0.01), (0.63, 0.04), (0.69, 0.019), (0.76, 0.0), (1.27, .013)],
-               "O$_3$" : [(0.25, 0.01), (0.62, 0.065)],
-               "CO$_2$" : [(0.88, 0.05), (1.05, 0.045), (1.21, .046), (1.62, 0.03), (1.75, 0.051), (2.01, 0.03), (2.45, 0.055)],
-               "CO" : [(0.15, 0.02), (1.2, 0.054), (1.58, 0.047), (2.35, 0.03)]
+    moleloc = {"O$_2$" : [(0.15, 0.01), (0.63, 0.124), (0.68, 0.068), (0.77, 0.015), (1.275, .07)],
+               "O$_3$" : [(0.25, 0.07), (0.62, 0.18)],
+               "CO$_2$" : [(1.6, 0.12), (2.15, 0.09)],
+               "CO" : [(0.15, 0.05)],
+               "H$_2$O" : [(0.88, 0.04), (0.98, 0.19), (1.163, 0.16), (1.4, 0.12), (1.87, 0.08)],
+               "CH$_4$" : [(1.22, 0.19), (1.4, 0.07), (1.65, 0.09), (1.87, 0.06), (2.05,0.06), (2.27,0.05), (2.37,0.04)]
           }
 
     # import basic dependencies

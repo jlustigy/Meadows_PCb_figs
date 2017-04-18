@@ -18,7 +18,7 @@ def make_fig():
     import utils.spectra as spc
 
     # Params specific to this plot
-    savetag = "fig21_new"
+    savetag = "fig21"
     title1 = "Archean Earth-like ($50\%$ clouds)"
     plot_kwargs = [
         {"color" : "purple", "label" : "No Haze, $5\%$ CO$_2$, $1\%$ CH$_4$", "alpha" : 0.7},
@@ -31,6 +31,13 @@ def make_fig():
     fname_new1 = "model_outputs/HAZE_1.00e-02ch4_combined_new_toa.rad"
     fname_new2 = "model_outputs/HAZE_1.50e-02ch4_combined_new_toa.rad"
     fname_new = [fname_new1, fname_new2]
+
+    m = {
+        "Haze" : [(0.35, 0.125)],
+        "H$_2$O" : [(0.72, 0.05), (0.815, 0.07), (0.94, 0.19), (1.163, 0.16), (1.47, 0.12), (1.87, 0.06)],
+        "CH$_4$" : [(0.62, 0.13), (0.79, 0.2), (0.89, 0.175), (1.0, 0.175), (1.22, 0.19), (1.4, 0.15), (1.7, 0.06), (2.37,0.04)],
+        "CO$_2$" : [(1.6, 0.135), (2.05,0.06)]
+    }
 
     fname1 = "HAZE_1.00e-02ch4_clear_new_toa.rad"
     fname2 = "HAZE_1.00e-02ch4_cirrus_new_toa.rad"
@@ -64,7 +71,7 @@ def make_fig():
     # Make reflectance plot
     spc.plot_rad(fname_new, savetag=savetag, lammin=lammin, lammax=lammax, ylim=ylim,
                  title=title, labels=None, forced_single=True,
-                 plot_kwargs=plot_kwargs, legend=True)
+                 plot_kwargs=plot_kwargs, legend=True, moleloc=[m, None])
 
     return
 #########################################

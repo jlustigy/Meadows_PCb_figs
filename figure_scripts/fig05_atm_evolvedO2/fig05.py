@@ -14,7 +14,7 @@ def make_fig():
     from utils import fig_params, atm
 
     # Params specific to this plot
-    savetag = "fig05_new"
+    savetag = "fig05"
     #fname1 = "profile_O2_CO2_10bar_prox.pt"
     #fname2 = "profile_O2_CO2_90bar_prox.pt"
     fname1 = "10bar_O2_CO2_final.pt_filtered_R1"
@@ -25,7 +25,8 @@ def make_fig():
     xlim = [1e-9, 1.1]
     ylim = [1e7, 3e-2]
     tlim = [175, 575]
-    legloc = [1e-1, 7e-1, 1e3, 1e1, 9e-2, 1, None, None, None, None]
+    legloc1 = [1e-1, 7e-1, 1e3, 1e1, 9e-2, 1, None, None, None, None]
+    legloc = (legloc1, legloc1)
 
     # Read in atm files
     atmpath = os.path.join(os.path.dirname(__file__),"model_outputs/", fname1)

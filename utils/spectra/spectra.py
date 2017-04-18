@@ -76,7 +76,7 @@ def add_rad_plot(lam, refl, radius=6850., ax0=None, legend=False,
         ax = ax0
 
     ax.set_xlabel(r"Wavelength [$\mu$m]")
-    ax.set_ylabel(r"Reflectivity ($I/F$)")
+    ax.set_ylabel(r"Reflectivity ($\pi I/F$)")
 
     ax.plot(lam, refl, **plot_kwargs)
 
@@ -129,7 +129,7 @@ def weight_spectra(dic, ret=True, output=None):
 def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
                     plot_kwargs={"color" : "black"}, title=None, plotdir="../../figures/",
                     legloc=None, ylim=None, labels=None, forced_single=False,
-                    legend=False, Nstr=8, moleloc=None):
+                    legend=False, Nstr=8, moleloc=None, eps=True):
     """
 
     Parameters
@@ -177,7 +177,7 @@ def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
         refl = toaf / solar
         # Set labels
         ax.set_xlabel(r"Wavelength [$\mu$m]")
-        ax.set_ylabel(r"Reflectivity ($I/F$)")
+        ax.set_ylabel(r"Reflectivity ($\pi I/F$)")
         ax.set_xlim([lammin, lammax])
         ax.text(0.5, 0.98, title[i],\
              verticalalignment='top', horizontalalignment='center',\
@@ -195,15 +195,16 @@ def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
                 mloc = moleloc
             else:
                 print "Incompatible type for moleloc kwarg"
-            for key, value in mloc.iteritems():
-                #print key, value
-                # get molecule color
-                mcol = molecules.color_from_molecule(key)
-                for im in range(len(value)):
-                    # place label
-                    ax.text(value[im][0], value[im][1], key, va='center', ha='center',
-                         color=mcol, fontsize=16, zorder=10,
-                         bbox=dict(boxstyle="square", fc="none", ec="none"))
+            if mloc is not None:
+                for key, value in mloc.iteritems():
+                    #print key, value
+                    # get molecule color
+                    mcol = molecules.color_from_molecule(key)
+                    for im in range(len(value)):
+                        # place label
+                        ax.text(value[im][0], value[im][1], key, va='center', ha='center',
+                             color=mcol, fontsize=16, zorder=10,
+                             bbox=dict(boxstyle="square", fc="none", ec="none"))
 
 
         # Attempt to label molecules automatically
@@ -280,6 +281,9 @@ def plot_rad(fname, savetag="refl_test", lammin=0.2, lammax=20.0,
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+
+    if eps:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
 
     return
 
@@ -360,10 +364,11 @@ def tdepth_from_zeff(zeff, Rp, Rs):
     return (Rp + zeff)**2/Rs**2
 
 
-def plot_trans(fname, savetag="refl_test", lammin=0.2, lammax=20.0, radius=(6850., 97398.),
+def plot_trans(fname, savetag="refl_test", lammin=0.2, lammax=20.0, radius=(6850., 98093.7),
                     plot_kwargs={"color" : "black"}, title=None, plotdir="../../figures/",
-                    legloc=None, ylim=None, labels=None, forced_single=False,
-                    legend=False, xticks=[0.2, 0.4, 1.0, 2.0, 4.0, 10.0, 20.]):
+                    legloc=0, ylim=None, labels=None, forced_single=False,
+                    legend=False, xticks=[0.2, 0.4, 1.0, 2.0, 4.0, 10.0, 20.],
+                    moleloc=None, eps=True):
     """
 
     Parameters
@@ -421,17 +426,36 @@ def plot_trans(fname, savetag="refl_test", lammin=0.2, lammax=20.0, radius=(6850
         # Actually plot it!
         ax.plot(lam[mask], zeff[mask], **plot_kwargs[i])
 
+        if moleloc is not None:
+            if type(moleloc) is list:
+                mloc = moleloc[i]
+            elif type(moleloc) is dict:
+                mloc = moleloc
+            else:
+                print "Incompatible type for moleloc kwarg"
+            if mloc is not None:
+                for key, value in mloc.iteritems():
+                    #print key, value
+                    # get molecule color
+                    mcol = molecules.color_from_molecule(key)
+                    for im in range(len(value)):
+                        # place label
+                        ax.text(value[im][0], value[im][1], key, va='center', ha='center',
+                             color=mcol, fontsize=16, zorder=10,
+                             bbox=dict(boxstyle="square", fc="none", ec="none"))
+
         ax.set_xticks(xticks)
         ax.set_xticklabels(['{:g}'.format(tick) for tick in xticks])
 
 
-        ax1 = ax.twinx()
-        scale = 1e3
+        if multi or (i < 1):
+            ax1 = ax.twinx()
+        scale = 1e6
         ax1.plot(lam[mask], scale*tdepth[mask], visible=False, **plot_kwargs[i])
         ax1.set_ylim([scale*tdepth_from_zeff(ax.get_ylim()[0], radius[0], radius[1]),
                       scale*tdepth_from_zeff(ax.get_ylim()[1], radius[0], radius[1])])
         yticks = ax.get_yticks()
-        ax1.set_ylabel(r"Transit Depth ($\times 10^{-3}$)", rotation=270, labelpad=30)
+        ax1.set_ylabel(r"Transit Depth $(R_p/R_s)^2$ [ppm]", rotation=270, labelpad=30)
         #td_ticks = [tdepth_from_zeff(tick, radius[0], radius[0]) for tick in yticks]
         #ax1.set_yticks(td_ticks)
         #ax1.set_yticklabels(['{:g}'.format(age) for tick in ages.value]);
@@ -502,13 +526,18 @@ def plot_trans(fname, savetag="refl_test", lammin=0.2, lammax=20.0, radius=(6850
                              color=colors[j], fontsize=12, zorder=100,
                              bbox=dict(boxstyle="square", fc="none", ec="none"))
 
+        ax.set_xlim([lammin, lammax])
+
     # Label
     if legend:
-        leg=ax.legend(loc=0, fontsize=16)
+        leg=ax.legend(loc=legloc, fontsize=16)
         leg.get_frame().set_alpha(0.0)
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+
+    if eps:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
 
     return
 
@@ -539,7 +568,8 @@ def read_surf_rad(path, Nrow=14):
     return lam, wno, solar, direct, sky
 
 def plot_transmittance(fname, lammin=0.0, lammax=10.0, ylim=[0.0,1.0],
-                       title="", plotdir="../../figures/", savetag="transmittance_test"):
+                       title="", plotdir="../../figures/", savetag="transmittance_test",
+                       eps=True):
     """
     """
 
@@ -561,3 +591,6 @@ def plot_transmittance(fname, lammin=0.0, lammax=10.0, ylim=[0.0,1.0],
 
     # Save
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+
+    if eps:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')

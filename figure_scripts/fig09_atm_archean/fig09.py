@@ -23,7 +23,8 @@ def make_fig():
     xlim = [1e-8, 2]
     ylim = [1e5, 6e-3 ]
     tlim = [145, 305]
-    legloc = [3e-1, 2e-2, None, None, None, 3e-2, None, None]
+    legloc1 = [3e-1, 2e-2, None, None, None, 3e-2, None, None]
+    legloc = [legloc1, legloc1]
 
     # Read in atm files
     atmpath = os.path.join(os.path.dirname(__file__),"model_outputs/", fname1)

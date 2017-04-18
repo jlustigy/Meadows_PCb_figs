@@ -15,7 +15,7 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig13.5_idl"
+    savetag = "fig13.5"
     lammin = 6.5
     lammax = 26.3
     R = 3
@@ -63,7 +63,7 @@ def make_fig():
 
     pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
                                 R=R, lammin=lammin, lammax=lammax,
-                                iout=iout, savetag=savetag+"_miri_"+key)
+                                iout=iout, savetag=savetag)
 
     return
 #########################################

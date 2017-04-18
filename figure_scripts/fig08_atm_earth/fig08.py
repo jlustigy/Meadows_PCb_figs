@@ -14,19 +14,20 @@ def make_fig():
     from utils import fig_params, atm
 
     # Params specific to this plot
-    savetag = "fig08_new2"
+    savetag = "fig08"
     #fname1 = "profile_modern_earth_preindustrial.pt_filtered.atm"
     #fname2 = "profile_earth_prox.pt_filtered.atm"
     fname1 = "profile_Earth_modern_preindustrial_R1.pt_filtered.atm"
     #fname2 = "profile_Earth_proxb_.pt_filtered_R1.atm"
-    fname2 = "profile_Earth_proxb_.pt_filtered.atm"
+    fname2 = "profile_Earth_proximacentaurib_187Kstrat_filtered.atm"
     title1 = "Pre-Industrial Earth"
     title2 = "Earth-like Proxima Cen b"
     seed = 25#16#11#7
     xlim = [1e-8, 2]
     ylim = [1e5, 4e-1 ]
     tlim = [145, 305]
-    legloc = [4e3, 1e1, 1e2, 2e2, 5, 1e1, 1, None, None, None, None, 4e2, 3]
+    legloc1 = [4e3, 8e1, 1e2, 2e2, 5, 6e1, 1, None, None, None, None, 4e2, 3]
+    legloc = [legloc1, legloc1]
 
     # Read in atm files
     atmpath = os.path.join(os.path.dirname(__file__),"model_outputs/", fname1)

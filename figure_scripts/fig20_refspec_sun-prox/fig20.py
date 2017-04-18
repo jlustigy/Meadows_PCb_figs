@@ -18,7 +18,7 @@ def make_fig():
     import utils.spectra as spc
 
     # Params specific to this plot
-    savetag = "fig20_new"
+    savetag = "fig20"
     title1 = "Sun/Proxima Comparison"
     plot_kwargs = [
         {"color" : "orange", "label" : "Earth-Sun", "alpha" : 0.7},
@@ -35,13 +35,18 @@ def make_fig():
     fname1 = "modern_earth_preindustrial_hitran2012_300_100000cm_toa.rad"
     fname2 = "modern_earth_preindustrial_hitran2012_300_100000cm_stratocum_toa.rad"
     fname3 = "modern_earth_preindustrial_hitran2012_300_100000cm_cirrus_toa.rad"
-    fname4 = "profile_Earth_proxb_clear_toa.rad"
-    fname5 = "profile_Earth_proxb_stratocum_toa.rad"
-    fname6 = "profile_Earth_proxb_cirrus_toa.rad"
+    fname4 = "profile_Earth_proxb_.pt_hitran2012_o4_noh2co_187Kstrat_toa.rad"
+    fname5 = "profile_Earth_proxb_.pt_stratocum_hitran2012_o4_noh2co_187Kstrat_toa.rad"
+    fname6 = "profile_Earth_proxb_.pt_cirrus_hitran2012_o4_noh2co_187Kstrat_toa.rad"
     fname = [
         os.path.join(os.path.dirname(__file__),"model_outputs/", f)
         for f in [fname1, fname2, fname3, fname4, fname5, fname6]
     ]
+
+    moleloc = {
+               "O$_3$" : [(0.25, 0.03), (0.5, 0.23)],
+               "CH$_4$" : [(0.88, 0.215), (1.0, 0.215), (1.22, 0.20), (1.4, 0.07), (1.65, 0.15), (1.87, 0.07), (2.05,0.1), (2.27,0.12)]
+          }
 
     # Weight each flux
     dic1 = {
@@ -64,7 +69,7 @@ def make_fig():
     # Make reflectance plot
     spc.plot_rad(fname_new, savetag=savetag, lammin=lammin, lammax=lammax, ylim=ylim,
                  title=title, labels=None, forced_single=True,
-                 plot_kwargs=plot_kwargs, legend=True)
+                 plot_kwargs=plot_kwargs, legend=True, moleloc=[moleloc, None])
 
     return
 #########################################

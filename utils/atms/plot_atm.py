@@ -49,13 +49,15 @@ def H2SO4_vapor_pandora(P, T):
 
 def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
                  title=None, xlim=None, ylim=None, tlim=None, bbox_to_anchor=(1., 1.03),
-                 seed=0, legloc=None, cond_curve=None):
+                 seed=0, legloc=None, cond_curve=None, cond_curve2=None):
     """
 
     Parameters
     ----------
     cond_curve : tuple
         Add condensation curve e.g. (P, T, "Name", loc)
+    cond_curve2 : tuple
+        Add condensation curve e.g. (P, T, "Name", loc) to VMR axis
     """
 
     # Create new figure and axis or use the one provided
@@ -122,6 +124,30 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
             color=ccc, fontsize=12, zorder=10,
             bbox=dict(boxstyle="square", fc="w", ec="none"))
 
+    # Plot condenasation vapor pressure curve
+    if cond_curve2 is not None:
+        Pv, Tv = cond_curve2[0], cond_curve2[1]
+        ccc = molecules.color_from_molecule(cond_curve2[2])
+        ax.plot(Tv, Pv, color="k", ls="dotted", zorder=10)
+        #axT.plot(Tv, Pv, "o", color=ccc, zorder=1)
+        # Labels
+        """
+        xmin, xmax = ax.axes.get_xlim()
+        xmask = (Tv > xmin) & (Tv < xmax)
+        if cond_curve[3] is None:
+            # Get random index
+            j = np.random.choice(np.arange(len(Tv)))
+        else:
+            # Grab y-index nearest user specified y-value
+            j = np.argmin(np.fabs(Pv - cond_curve[3]))
+        # Set x, y of text label
+        y, x = Pv[j], Tv[j]
+        # Place text
+        axT.text(x, y, cond_curve[2], va='center', ha='center',
+            color=ccc, fontsize=12, zorder=10,
+            bbox=dict(boxstyle="square", fc="w", ec="none"))
+        """
+
 
     # Create legend
     if legend:
@@ -138,6 +164,7 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
             mask = (tmask) & (ymask)
             # Does temperature line show up in the plot window?
             if np.sum(mask) > 0:
+                label_here = True
                 # Select y-index for text label
                 if legloc is None:
                     # Grab a valid y-index at random
@@ -145,21 +172,25 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
                 elif legloc[0] is None:
                     # Grab a valid y-index at random
                     j = np.random.choice(np.arange(len(mask))[mask])
+                elif legloc[0] is False:
+                    label_here = False
                 else:
                     # Grab y-index nearest user specified y-value
                     j = np.argmin(np.fabs(P - legloc[0]))
                 # Set x, y of text label
                 y, x = P[j], T[j]
                 # Place text
-                axT.text(x, y, "Temp", va='center', ha='center',
-                    color="black", fontsize=12, zorder=100,
-                    bbox=dict(boxstyle="square", fc="w", ec="none"))
+                if label_here:
+                    axT.text(x, y, "Temp", va='center', ha='center',
+                        color="black", fontsize=12, zorder=100,
+                        bbox=dict(boxstyle="square", fc="w", ec="none"))
             # Loop over molecules
             for i in range(len(molec_names)):
                 xmask = (gas_profiles[:,i] > (xmin*2)) & (gas_profiles[:,i] < (xmax/2))
                 mask = (xmask) & (ymask)
                 # Does the line show up in the plot window?
                 if np.sum(mask) > 0:
+                    label_here = True
                     # Select y-index for text label
                     if legloc is None:
                         # Grab a valid y-index at random
@@ -167,15 +198,18 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
                     elif legloc[i+1] is None:
                         # Grab a valid y-index at random
                         j = np.random.choice(np.arange(len(mask))[mask])
+                    elif legloc[i+1] is False:
+                        label_here = False
                     else:
                         # Grab y-index nearest user specified y-value
                         j = np.argmin(np.fabs(P - legloc[i+1]))
                     # Set x, y of text label
                     y, x = P[j], gas_profiles[j,i]
-                    # Place text
-                    ax.text(x, y, molec_names[i], va='center', ha='center',
-                         color=colors[i], fontsize=12, zorder=100,
-                         bbox=dict(boxstyle="square", fc="w", ec="none"))
+                    if label_here:
+                        # Place text
+                        ax.text(x, y, molec_names[i], va='center', ha='center',
+                             color=colors[i], fontsize=12, zorder=100,
+                             bbox=dict(boxstyle="square", fc="w", ec="none"))
                     """
                     ns = np.arange(len(mask))*mask
                     nmin, nmax = np.min(np.nonzero(ns)), ns.max()
@@ -252,7 +286,7 @@ def add_atm_plot(P, T, gas_profiles, molec_names, ax0=None, legend=False,
 def plot_single_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
                     title=None, plotdir="../../figures/", bbox_to_anchor=(1., 1.03),
                     xlim=None, ylim=None, tlim=None, seed=0, legend="custom",
-                    legloc=None, cond_curve=None):
+                    legloc=None, cond_curve=None, cond_curve2=None, eps=True):
     """
     """
 
@@ -262,15 +296,21 @@ def plot_single_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
     # Add atm plot
     add_atm_plot(P, T, gas_profiles, molec_names, ax0=ax, legend=legend,
                      title=title, bbox_to_anchor=bbox_to_anchor, xlim=xlim,
-                     ylim=ylim, tlim=tlim, seed=seed, legloc=legloc, cond_curve=cond_curve)
+                     ylim=ylim, tlim=tlim, seed=seed, legloc=legloc, cond_curve=cond_curve,
+                     cond_curve2=cond_curve2)
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
 
+    if eps:
+        # Save figure
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+
 def plot_double_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
                     title=None, plotdir="../../figures/", bbox_to_anchor=(1., 1.03),
                     xlim=None, ylim=None, tlim=None, legend="custom", seed=0,
-                    legloc=None, cond_curve=(None, None)):
+                    legloc=(None, None), cond_curve=(None, None), cond_curve2=(None, None),
+                    eps=True):
     """
     """
 
@@ -280,18 +320,22 @@ def plot_double_atm(P, T, gas_profiles, molec_names, savetag="atm_test",
     # Add atm plot
     add_atm_plot(P[0], T[0], gas_profiles[0], molec_names[0], ax0=ax[0], legend=legend,
                      title=title[0], bbox_to_anchor=bbox_to_anchor, xlim=xlim, ylim=ylim,
-                     tlim=tlim, seed=seed, legloc=legloc, cond_curve=cond_curve[0])
+                     tlim=tlim, seed=seed, legloc=legloc[0], cond_curve=cond_curve[0], cond_curve2=cond_curve2[0])
     add_atm_plot(P[1], T[1], gas_profiles[1], molec_names[1], ax0=ax[1], legend=legend,
                      title=title[1], xlim=xlim, ylim=ylim, tlim=tlim, seed=seed,
-                     legloc=legloc, cond_curve=cond_curve[1])
+                     legloc=legloc[1], cond_curve=cond_curve[1], cond_curve2=cond_curve2[1])
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
 
+    if eps:
+        # Save figure
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+
     return
 
 def plot_aerosol(altitude, density, radius, savetag="aero_test",
-                    plotdir="../../figures/"):
+                    plotdir="../../figures/", eps=True):
     """
     """
 
@@ -319,5 +363,9 @@ def plot_aerosol(altitude, density, radius, savetag="aero_test",
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+
+    if eps:
+        # Save figure
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
 
     return

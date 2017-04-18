@@ -15,7 +15,7 @@ def make_fig():
 
     # Params specific to this plot
     savetag = "fig07"
-    fname = "1barGao_final.atm"
+    fname = "1barGao_final3.atm"
     plot_title = "1 bar CO$_2$/CO/O$_2$, Dessicated"
     seed = 2
     xlim = [6e-8, 3]

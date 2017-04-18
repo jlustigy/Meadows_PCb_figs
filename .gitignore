@@ -1,6 +1,7 @@
 *.txt
 *.dat
 *.rad
+*.r*
 *.atm
 *.tran
 *.trnst

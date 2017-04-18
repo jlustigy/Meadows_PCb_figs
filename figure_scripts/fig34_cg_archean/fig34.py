@@ -18,8 +18,7 @@ def make_fig():
 
     # Params specific to this plot
     savetag = "fig34"
-    frad = "fig21_NOHAZE_msun21_0.0Ga_1.00e-02ch4_rmix_5.0E-2COMBINED_toa.rad"
-    frad = "fig21_HAZE_msun21_0.0Ga_1.50e-02ch4_rmix_5.0E-2COMBINED_toa.rad"
+    frad = "HAZE_1.50e-02ch4_combined_new_toa.rad"
     ytype = "FpFs"
     itime = 10.    # Exposure time
     wantsnr = 20.0  # Desired signal-to-noise ratio
@@ -30,7 +29,7 @@ def make_fig():
 
     # Read-in all disk integrated spectra
     typedir = ""
-    output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
+    #output1, flist = pcs.open_phase_dir(alpha, planetdir, typedir)
 
     # Make plot
     """
@@ -38,8 +37,10 @@ def make_fig():
     """
 
     # Plot disk-integrated spectral at 90 deg
-    lamhr, sol, rad = pcg.parse_from_phase(output1, alpha, phase=90)
-    pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_disk_new", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    #lamhr, sol, rad = pcg.parse_from_phase(output1, alpha, phase=90)
+    #pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_disk_new", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    #pcg.plot_coronagraph_mod2(lamhr, sol, rad, savetag=savetag+"_v3_disk_new", itime=itime, wantsnr=wantsnr, ytype=ytype)
+
 
     # Using rad file...
     path = os.path.join(os.path.dirname(__file__), frad)
@@ -47,9 +48,9 @@ def make_fig():
     lamhr, sol, rad = pcg.parse_from_rad(output, phase=90)
 
     # Plot v1
-    pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
-    pcg.plot_coronagraph_mod(lamhr, sol, rad, savetag=savetag+"_v2_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
-    pcg.plot_coronagraph_mod2(lamhr, sol, rad, savetag=savetag+"_v3_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    #pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    #pcg.plot_coronagraph_mod(lamhr, sol, rad, savetag=savetag+"_v2_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
+    pcg.plot_coronagraph_mod2(lamhr, sol, rad, savetag=savetag, itime=itime, wantsnr=wantsnr, ytype=ytype)
 
     return
 #########################################

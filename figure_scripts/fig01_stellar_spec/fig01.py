@@ -22,7 +22,7 @@ def make_fig():
     fname2 = "Kurucz1cm-1_susim_atlas2.dat"
 
     # Smoothing parameters
-    window1 = 11
+    window1 = 101
     window2 = 11
     poly1 = 5
     poly2 = 5
@@ -31,7 +31,12 @@ def make_fig():
     path = os.path.join(os.path.dirname(__file__),"data_files/", fname1)
     data = np.genfromtxt(path, skip_header=25)
     wl_prox, flux_prox = data[:,0], data[:,1]*(1.0/0.0485)**2
-    #flux_prox = savgol_filter(flux_prox, window1, poly1, mode='nearest')
+    # smooth portion of spectrum
+    smin = 0.0
+    smax = 0.185
+    smask = (wl_prox > smin) & (wl_prox < smax)
+    sflux = savgol_filter(flux_prox[smask], window1, poly1, mode='nearest')
+    flux_prox = np.hstack([sflux, flux_prox[~smask]])
 
     path = os.path.join(os.path.dirname(__file__),"data_files/", fname2)
     data = np.genfromtxt(path, skip_header=12)
@@ -53,7 +58,7 @@ def make_fig():
     ax[1].plot(wl_prox, flux_prox, color="orange", label="Proxima Centauri at 0.0485 AU")
     ax[1].plot(wl_sun, flux_sun, color="black", label="Sun at 1 AU")
     ax[1].set_xlim([0.1, 0.4])
-    #ax[1].set_ylim([0,2600])
+    ax[1].set_ylim([1e-4,1e4])
 
     # Label
     leg=ax[0].legend(loc=0, fontsize=16)
@@ -61,6 +66,7 @@ def make_fig():
 
     # Save figure
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
+    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
 
     return
 #########################################

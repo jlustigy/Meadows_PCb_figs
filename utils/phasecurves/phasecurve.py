@@ -9,6 +9,10 @@ import matplotlib.colors as colors
 
 import coronagraph as cg
 
+import sys
+sys.path.append("../")
+from utils import molecules, fig_params
+
 __all__ = ["read_one_phasecurve", "read_phasecurves", "plot_disk_integrated_spec",
            "plot_alb_phase", "plot_rad_phase", "plot_phasecurve", "open_phase_dir",
            "phase_phots", "plot_binned_phasecurves", "plot_binned_phasecurves_new",
@@ -1050,7 +1054,8 @@ def plot_binned_phasecurves_new(alpha, output1, output2, output3, iout=0, saveta
 
 def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savetag="fig",
                             amin=0.0, amax=180.0, iout20=0, plotdir="../../figures/",
-                            R=3, lammin=6.5, lammax=26.3, legloc=7):
+                            R=3, lammin=6.5, lammax=26.3, legloc=7, moleloc=None,
+                            eps=True):
     """
     Creates binned phasecurve plots (used in Meadows et al. paper)
 
@@ -1196,11 +1201,32 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
         #ax1.text(lamlo[ix], yarr_maxlo[ix]*1.2, miri_names[ix],
         #        verticalalignment='bottom', horizontalalignment='center')
 
+    # Label molecules
+    if moleloc is not None:
+        if type(moleloc) is dict:
+            mloc = moleloc
+        else:
+            print "Incompatible type for moleloc kwarg"
+        if mloc is not None:
+            for key, value in mloc.iteritems():
+                #print key, value
+                # get molecule color
+                mcol = molecules.color_from_molecule(key)
+                for im in range(len(value)):
+                    # place label
+                    ax.text(value[im][0], value[im][1], key, va='center', ha='center',
+                         color=mcol, fontsize=16, zorder=10,
+                         bbox=dict(boxstyle="square", fc="none", ec="none"))
+
     leg=ax1.legend(loc=legloc, fontsize=16, ncol=2)
     leg.get_frame().set_alpha(0.0)
 
     # Save plot
     fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
     print "Saved:", savetag
+
+    if eps:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+        print "Saved:", savetag
 
     return

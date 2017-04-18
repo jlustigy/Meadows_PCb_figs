@@ -8,7 +8,7 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig17_new"
+    savetag = "fig17"
     #fname1 = "fig17_smart_spectra_pandora10bar_cloudy_500_100000cm-1_toa.rad"
     #fname2 = "fig17_smart_spectra_pandora90bar_clouds_500_100000cm-1_toa.rad"
     fname1 = "PCb_Venus_10bar_toa.rad"

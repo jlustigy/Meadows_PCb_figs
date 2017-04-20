@@ -313,7 +313,7 @@ def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag=
     ax2,ax3 = add_coronagraph_axes(lam, sol, rad,
                                Tput=Tput, diam=16.0,
                                title="LUVOIR 16m",
-                               ax1=ax2, ax2=ax3, Tsys=200.0, Tdet=50.0,
+                               ax1=ax2, ax2=ax3, Tsys=270.0, Tdet=50.0,
                                ground=False, wantsnr=wantsnr, itime=itime,
                                ytype=ytype)
     ax2.set_title("LUVOIR 16m")
@@ -322,7 +322,7 @@ def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag=
     ax0, ax1 = add_coronagraph_axes(lam, sol, rad,
                                 Tput=Tput, diam=6.5,
                                 title="HabEx 6.5m",
-                                ax1=ax0, ax2=ax1, Tsys=200.0, Tdet=50.0,
+                                ax1=ax0, ax2=ax1, Tsys=270.0, Tdet=50.0,
                                 ground=False, wantsnr=wantsnr, itime=itime,
                                 ytype=ytype)
     ax0.set_title("HabEx 6.5m")
@@ -332,7 +332,7 @@ def plot_coronagraph(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, savetag=
                                        Tput=Tput, title="Ground-Based 30m",
                                        lammin = 0.35, lammax = 1.5,
                                        ax1=ax4, ax2=ax5, iwa_lines=True,
-                                       Tsys=269.0, Tdet=50.0, ground=True,
+                                       Tsys=270.0, Tdet=50.0, ground=True,
                                        wantsnr=wantsnr, itime=itime,
                                        ytype=ytype
                                        )
@@ -390,7 +390,7 @@ def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, save
     ax2,ax3 = add_coronagraph_axes(lam, sol, rad,
                                Tput=Tput, diam=16.0,
                                title="LUVOIR 16m",
-                               ax1=ax2, ax2=ax3, Tsys=200.0, Tdet=50.0,
+                               ax1=ax2, ax2=ax3, Tsys=270.0, Tdet=50.0,
                                ground=False, wantsnr=wantsnr, itime=itime,
                                ytype=ytype)
     ax2.set_title("LUVOIR 16m")
@@ -399,7 +399,7 @@ def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, save
     ax0, ax1 = add_coronagraph_axes(lam, sol, rad,
                                 Tput=Tput, diam=6.5,
                                 title="HabEx 6.5m",
-                                ax1=ax0, ax2=ax1, Tsys=200.0, Tdet=50.0,
+                                ax1=ax0, ax2=ax1, Tsys=270.0, Tdet=50.0,
                                 ground=False, wantsnr=wantsnr, itime=itime,
                                 ytype=ytype)
     ax0.set_title("HabEx 6.5m")
@@ -409,7 +409,7 @@ def plot_coronagraph_mod(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, save
                                        Tput=Tput, title="Ground-Based 30m",
                                        lammin = 0.35, lammax = 1.5,
                                        ax1=ax4, ax2=ax5, iwa_lines=True,
-                                       Tsys=269.0, Tdet=50.0, ground=True,
+                                       Tsys=270.0, Tdet=50.0, ground=True,
                                        wantsnr=wantsnr, itime=itime,
                                        ytype=ytype
                                        )
@@ -474,7 +474,7 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
     ax2,ax3 = add_coronagraph_axes(lam, sol, rad,
                                Tput=Tput, diam=16.0,
                                title="LUVOIR 16m",
-                               ax1=ax2, ax2=ax3, Tsys=200.0, Tdet=50.0,
+                               ax1=ax2, ax2=ax3, Tsys=270.0, Tdet=50.0,
                                ground=False, wantsnr=wantsnr, itime=itime,
                                ytype=ytype)
     #ax2.set_title("LUVOIR 16m")
@@ -486,7 +486,7 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
     ax0, ax1 = add_coronagraph_axes(lam, sol, rad,
                                 Tput=Tput, diam=6.5,
                                 title="HabEx 6.5m",
-                                ax1=ax0, ax2=ax1, Tsys=200.0, Tdet=50.0,
+                                ax1=ax0, ax2=ax1, Tsys=270.0, Tdet=50.0,
                                 ground=False, wantsnr=wantsnr, itime=itime,
                                 ytype=ytype)
     #ax0.set_title("HabEx 6.5m")
@@ -499,7 +499,7 @@ def plot_coronagraph_mod2(lam, sol, rad, phase=90, wantsnr=20.0, itime=None, sav
                                        Tput=Tput, title="Ground-Based 30m",
                                        lammin = 0.35, lammax = 1.5,
                                        ax1=ax4, ax2=ax5, iwa_lines=True,
-                                       Tsys=269.0, Tdet=50.0, ground=True,
+                                       Tsys=270.0, Tdet=50.0, ground=True,
                                        wantsnr=wantsnr, itime=itime,
                                        ytype=ytype
                                        )

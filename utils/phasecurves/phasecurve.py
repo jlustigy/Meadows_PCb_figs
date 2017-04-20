@@ -1182,7 +1182,7 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
     ax1.yaxis.set_label_position("right")
 
     ax1.plot(lamhi2[lmask], yarr_max, lw=2.0, c="black", label="Max")
-    ax1.plot(lamhi3[lmask], yarr_20, lw=2.0, c="black", alpha=0.5, label=r"$\Delta T = 20$K")
+    ax1.plot(lamhi3[lmask], yarr_20, lw=2.0, c="gray", label=r"$\Delta T = 20$K")
 
     #ax1.semilogy()
 

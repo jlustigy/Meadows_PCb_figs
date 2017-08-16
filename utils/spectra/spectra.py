@@ -327,11 +327,11 @@ def read_transit(path, skip_header=0, radius=None):
     -------
     wl : ndarray
         Wavelength [microns]
-    flux_ratio : ndarray
-        Fractional flux transmission through model atmosphere (between 0 and 1)
     absorbing_radius : ndarray
         Effective absorbing radius of the atmosphere (in km)
         (effective radius - solid body radius)
+    tdepth : ndarray
+        Transit depth
 
     Note
     ----

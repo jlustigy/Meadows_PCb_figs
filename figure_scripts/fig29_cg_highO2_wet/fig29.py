@@ -17,11 +17,12 @@ def make_fig():
     import utils.spectra as spc
 
     # Params specific to this plot
-    savetag = "fig29"
+    savetag = "fig29_ESO"
     frad = "10bar_O2_wet.pt_filtered_hitran2012_50_100000cm_toa.rad"
     ytype = "FpFs"
     itime = 10.0    # Exposure time
     wantsnr = 20.0  # Desired signal-to-noise ratio
+    exptimeband=False
 
     # More general params
     planetdir = os.path.join(os.path.dirname(__file__),"model_outputs/new/")
@@ -49,7 +50,8 @@ def make_fig():
     # Plot v1
     #pcg.plot_coronagraph(lamhr, sol, rad, savetag=savetag+"_v1_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
     #pcg.plot_coronagraph_mod(lamhr, sol, rad, savetag=savetag+"_v2_rad", itime=itime, wantsnr=wantsnr, ytype=ytype)
-    pcg.plot_coronagraph_mod2(lamhr, sol, rad, savetag=savetag, itime=itime, wantsnr=wantsnr, ytype=ytype)
+    pcg.plot_coronagraph_mod2(lamhr, sol, rad, savetag=savetag, itime=itime, wantsnr=wantsnr, ytype=ytype,
+                              exptimeband=exptimeband)
 
     return
 #########################################

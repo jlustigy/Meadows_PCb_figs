@@ -1,5 +1,5 @@
 """
-Figure 1
+Figure 02
 
 Author: Jacob Lustig-Yaeger
 """
@@ -16,7 +16,7 @@ def make_fig():
     from scipy.signal import savgol_filter
 
     # Params specific to this plot
-    savetag = "fig01"
+    savetag = "fig02"
     plotdir="../../figures/"
     fname1 = "proxima_cen_sed.txt"
     fname2 = "Kurucz1cm-1_susim_atlas2.dat"

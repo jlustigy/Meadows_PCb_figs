@@ -14,7 +14,7 @@ def make_fig():
     fname1 = "10bar_O2_wet.pt_filtered_hitran2012_50_100000cm.trnst"
     fname2 = "10bar_O2_dry.pt_filtered_hitran2012_50_100000cm.trnst"
     title1 = "10 bar O$_2$ (Ocean)"
-    title2 = "10 bar O$_2$ (Dessicated)"
+    title2 = "10 bar O$_2$ (Desiccated)"
     lammin = 0.2
     lammax = 20.
     ylim = [0.0, 100.0]
@@ -22,7 +22,7 @@ def make_fig():
     labels2 = ["O2", "O3", "O4", "CO", "CO2"]
     plot_kwargs = [
         {"color" : "purple", "label" : "Ocean", "alpha" : 0.7},
-        {"color" : "orange", "label" : "Dessicated", "alpha" : 0.7}
+        {"color" : "orange", "label" : "Desiccated", "alpha" : 0.7}
     ]
     m1 = {"O$_2$" : [(0.215, 61.),(0.69, 36.), (0.76, 41.)],
                   "O$_3$" : [(0.28, 87.),(4.8,42.),(9.7,35.)],

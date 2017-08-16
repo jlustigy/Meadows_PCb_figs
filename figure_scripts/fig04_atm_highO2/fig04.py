@@ -20,7 +20,7 @@ def make_fig():
     fname1 = "10bar_O2_wet.pt_filtered.atm"
     fname2 = "10bar_O2_dry.pt_filtered.atm"
     title1 = "10 bar O$_2$, Ocean"
-    title2 = "10 bar O$_2$, Dessicated"
+    title2 = "10 bar O$_2$, Desiccated"
     seed = 38#35#30#27#18
     xlim = [1e-9, 1.1]
     ylim = [1e6, 1e-3]

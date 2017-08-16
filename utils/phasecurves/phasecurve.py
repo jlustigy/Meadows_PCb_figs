@@ -1055,7 +1055,7 @@ def plot_binned_phasecurves_new(alpha, output1, output2, output3, iout=0, saveta
 def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savetag="fig",
                             amin=0.0, amax=180.0, iout20=0, plotdir="../../figures/",
                             R=3, lammin=6.5, lammax=26.3, legloc=7, moleloc=None,
-                            eps=True):
+                            eps=True, ax0=None, title=None, saveplot=True):
     """
     Creates binned phasecurve plots (used in Meadows et al. paper)
 
@@ -1139,29 +1139,34 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
     colors1 = colorize(np.arange(len(lamlo)))[0]
     colors2 = colorize(np.arange(len(alpha[amask])), cmap="viridis")[0]
 
-    #"""
-    fig, ax = plt.subplots(figsize=(14,8))
-    #plt.subplots_adjust(wspace=0.05, hspace=0.0)
-    #ax0 = plt.subplot(gs[0])
-    ax1 = ax
-    left, bottom, width, height = [0.125, 0.48, 0.3, 0.4]
-    ax0 = fig.add_axes([left, bottom, width, height])
-    #"""
+    if ax0 is None:
+        #"""
+        fig, ax = plt.subplots(figsize=(14,8))
+        #plt.subplots_adjust(wspace=0.05, hspace=0.0)
+        #ax0 = plt.subplot(gs[0])
+        ax1 = ax
+        left, bottom, width, height = [0.125, 0.48, 0.3, 0.4]
+        ax2 = fig.add_axes([left, bottom, width, height])
+        #"""
+    else:
+        ax1 = ax0[0]
+        ax2 = ax0[1]
 
     # Set axis labels
-    ax0.set_ylabel(r"Planet/Star Contrast")
-    ax0.set_xlabel(r"Phase [deg]")
-    ax0.set_xticks([-180., -90., 0., 90., 180.])
-    ax0.semilogy()
-    #ax0.yaxis.tick_right()
-    #ax0.yaxis.set_label_position("right")
-    ax0.xaxis.tick_top()
-    ax0.xaxis.set_label_position("top")
+    ax2.set_ylabel(r"Planet/Star Contrast")
+    ax2.set_xlabel(r"Phase [deg]")
+    ax2.set_xticks([-180., -90., 0., 90., 180.])
+    ax2.semilogy()
+    #ax2.yaxis.tick_right()
+    #ax2.yaxis.set_label_position("right")
+    if saveplot:
+        ax2.xaxis.tick_top()
+        ax2.xaxis.set_label_position("top")
     for i in range(len(lamlo)):
-        #ax0.plot(alpha, Fp1[:,i]/Fs1[:,i], lw=2.0, c=colors1[i], ls="-", label=r"$%.1f\mu$m" % lamlo[i])
-        ax0.plot(alpha, Fp2[:,i]/Fs2[:,i], lw=2.0, c=colors1[i], ls="-")
-        ax0.plot(alpha, Fp3[:,i]/Fs3[:,i], lw=2.0, c=colors1[i], ls="dotted")
-        #ax0.fill_between(alpha, Fp1[:,i]/Fs1[:,i], Fp2[:,i]/Fs2[:,i], color=colors1[i], alpha=0.1)
+        #ax2.plot(alpha, Fp1[:,i]/Fs1[:,i], lw=2.0, c=colors1[i], ls="-", label=r"$%.1f\mu$m" % lamlo[i])
+        ax2.plot(alpha, Fp2[:,i]/Fs2[:,i], lw=2.0, c=colors1[i], ls="-")
+        ax2.plot(alpha, Fp3[:,i]/Fs3[:,i], lw=2.0, c=colors1[i], ls="dotted")
+        #ax2.fill_between(alpha, Fp1[:,i]/Fs1[:,i], Fp2[:,i]/Fs2[:,i], color=colors1[i], alpha=0.1)
         #ax1.axvspan(lamlo[i] - 0.5*dlamlo[i], lamlo[i] + 0.5*dlamlo[i], color=colors1[i], alpha=0.1, label=miri_names[i])
         #ax1.axvline(lamlo[i] - 0.5*dlamlo[i], c=colors1[i], ls="-", lw=1.0)
         #ax1.axvline(lamlo[i] + 0.5*dlamlo[i], c=colors1[i], ls="-", lw=1.0)
@@ -1192,7 +1197,7 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
     ax1.set_xlim([xaxlammin, xaxlammax])
     #ymin = np.nanmin(Fpe2[amask,:][:,lmask2]/Fse2[amask,:][:,lmask2])
     #ymax = np.nanmax(Fpe2[amask,:][:,lmask2]/Fse2[amask,:][:,lmask2])
-    ax0.set_ylim([ymin, ymax])
+    ax2.set_ylim([ymin, ymax])
     #ax1.set_ylim([ymin, ymax])
 
     for ix in range(len(miri_names)):
@@ -1214,19 +1219,28 @@ def plot_binned_phasecurves_miri(alpha, output1, output2, output3, iout=0, savet
                 mcol = molecules.color_from_molecule(key)
                 for im in range(len(value)):
                     # place label
-                    ax.text(value[im][0], value[im][1], key, va='center', ha='center',
+                    ax1.text(value[im][0], value[im][1], key, va='center', ha='center',
                          color=mcol, fontsize=16, zorder=10,
                          bbox=dict(boxstyle="square", fc="none", ec="none"))
 
-    leg=ax1.legend(loc=legloc, fontsize=16, ncol=2)
-    leg.get_frame().set_alpha(0.0)
+    if saveplot:
+        leg=ax1.legend(loc=legloc, fontsize=16, ncol=2)
+        leg.get_frame().set_alpha(0.0)
+        if title is not None:
+            ax1.set_title(title, loc='center', fontdict = {'horizontalalignment': 'left'})
+    else:
+        leg=ax1.legend(loc=legloc, fontsize=16, ncol=2)
+        leg.get_frame().set_alpha(0.0)
+        if title is not None:
+            ax1.set_title(title, loc='center')
 
     # Save plot
-    fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
-    print "Saved:", savetag
-
-    if eps:
-        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+    if saveplot:
+        fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".pdf"), bbox_inches='tight')
         print "Saved:", savetag
+
+        if eps:
+            fig.savefig(os.path.join(os.path.dirname(__file__), plotdir, savetag+".eps"), bbox_inches='tight')
+            print "Saved:", savetag
 
     return

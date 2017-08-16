@@ -11,7 +11,7 @@ def make_fig():
     savetag = "fig18"
     #fname1 = "gao_1bar_final_toa_old.rad"
     fname1 = "smart_gao_1bar_FINAL_toa.rad"
-    title1 = "1 bar CO$_2$/CO/O$_2$ (Dessicated)"
+    title1 = "1 bar CO$_2$/CO/O$_2$ (Desiccated)"
     lammin = 0.1
     lammax = 2.5
     ylim = [-0.01, 0.3]

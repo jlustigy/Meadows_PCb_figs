@@ -1,5 +1,5 @@
 """
-Figure 35?
+Figure 01
 
 Author: Jacob Lustig-Yaeger
 """
@@ -8,7 +8,7 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig35"
+    savetag = "fig01"
     fname = "fig35_modern_earth_standard_clearsky_2000_100000cm_60sza_sur.rad"
     title  = "Transmittance of the Modern Earth Atmosphere"
 

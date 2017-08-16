@@ -15,7 +15,8 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig12"
+    savetag = "fig12_new"
+    title = "Archean Earth-like"
     lammin = 6.5
     lammax = 18.
     R = 4
@@ -57,7 +58,7 @@ def make_fig():
 
     pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
                                 R=R, lammin=lammin, lammax=lammax,
-                                iout=iout, savetag=savetag)
+                                iout=iout, savetag=savetag, title=title)
 
     return
 #########################################

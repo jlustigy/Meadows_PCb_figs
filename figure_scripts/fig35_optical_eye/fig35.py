@@ -1,5 +1,5 @@
 """
-Figure 36
+Figure 35
 
 Author: Jacob Lustig-Yaeger
 """
@@ -8,7 +8,7 @@ Author: Jacob Lustig-Yaeger
 def make_fig():
 
     # Params specific to this plot
-    savetag = "fig36"
+    savetag = "fig35"
     fname = "fig35_modern_earth_standard_clearsky_2000_100000cm_60sza_sur.rad"
     title  = ""
 
@@ -40,7 +40,7 @@ def make_fig():
             "iwlflx" : (0,3)
         },
         {
-            "name" : "O$_2$-dominated (dessicated)",
+            "name" : "O$_2$-dominated (desiccated)",
             "file" : modir+"10bar_O2_dry.pt_filtered_hitran2012_50_100000cm_toa.rad",
             "header" : 0,
             "iwlflx" : (0,3)

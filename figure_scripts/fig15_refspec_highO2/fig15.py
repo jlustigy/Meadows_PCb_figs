@@ -14,7 +14,7 @@ def make_fig():
     fname1 = "10bar_O2_wet.pt_filtered_hitran2012_50_100000cm_toa.rad"
     fname2 = "10bar_O2_dry.pt_filtered_hitran2012_50_100000cm_toa.rad"
     title1 = "10 bar O$_2$ (Ocean)"
-    title2 = "10 bar O$_2$ (Dessicated)"
+    title2 = "10 bar O$_2$ (Desiccated)"
     lammin = 0.15
     lammax = 2.5
     ylim = [-0.02, 0.44]

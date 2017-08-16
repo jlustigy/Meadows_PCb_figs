@@ -15,7 +15,8 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig13"
+    savetag = "fig13_new"
+    title = r"10 bar O$_2$ (Desiccated)"
     lammin = 6.5
     lammax = 26.3
     R = 3
@@ -65,7 +66,7 @@ def make_fig():
     pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
                                 R=R, lammin=lammin, lammax=lammax,
                                 iout=iout, savetag=savetag,
-                                legloc=legloc)
+                                legloc=legloc, title=title)
 
     return
 #########################################

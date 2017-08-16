@@ -15,7 +15,8 @@ def make_fig():
     import utils.phasecurves as pcs
 
     # Params specific to this plot
-    savetag = "fig11"
+    savetag = "fig11_new"
+    title = "Earth-like"
     key = "combined"
     lammin = 6.5
     lammax = 26.3
@@ -80,7 +81,7 @@ def make_fig():
     pcs.plot_binned_phasecurves_miri(alpha, output1, output2, output3,
                                 R=R, lammin=lammin, lammax=lammax,
                                 iout=iout, savetag=savetag,
-                                legloc=legloc, moleloc=None)
+                                legloc=legloc, moleloc=None, title=title)
 
     return
 #########################################

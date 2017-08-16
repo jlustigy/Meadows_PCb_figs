@@ -1,5 +1,5 @@
 """
-Figure 2
+Figure 03
 
 Author: Jacob Lustig-Yaeger
 """
@@ -16,7 +16,7 @@ def make_fig():
     from scipy.signal import savgol_filter
 
     # Params specific to this plot
-    savetag = "fig02"
+    savetag = "fig03"
     plotdir="../../figures/"
     lammin  = 0.35
     lammax = 2.5

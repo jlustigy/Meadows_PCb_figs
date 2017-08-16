@@ -11,7 +11,7 @@ def make_fig():
     savetag = "fig25"
     #fname = "Gao2015_case3.pt_filtered_transit.tran"
     fname = "smart_gao_1bar_FINAL.trnst"
-    title = "1 bar CO$_2$/CO/O$_2$ (Dessicated)"
+    title = "1 bar CO$_2$/CO/O$_2$ (Desiccated)"
     lammin = 0.2
     lammax = 20.
     ylim = [0.0, 100.0]
